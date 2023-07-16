@@ -10,8 +10,8 @@
 	<ul>
 		{% for match in designer.match_set.all %}
 		<li>
-			<a href="{{ match.get_absolute_url }}">{{match.title}}</a>
-			({{match.match_type}})
+			<strong>{{match.match_type}}</strong>:
+			<a href="{{ match.get_absolute_url }}">{{ match.name }}</a>
 		</li>
 		{% endfor %}
 	</ul>
