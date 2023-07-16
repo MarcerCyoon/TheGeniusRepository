@@ -5,7 +5,6 @@
   <p>{{ designer.desc }}</p>
   
   <h2> Games Designed: </h2>
-  <br>
   {% if designer.match_set.all.count %}
 	<ul>
 		{% for match in designer.match_set.all %}
