@@ -16,6 +16,9 @@ def index(request):
 class MatchListView(generic.ListView):
     model = Match
 
+class DesignerListView(generic.ListView):
+    model = Designer
+
 class MatchDetailView(generic.DetailView):
     model = Match
 

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1 class="mt-3">List of all Genius Desginers</h1>
+	{% if designer_list %}
+	<ul>
+		{% for designer in designer_list %}
+		<li>
+			<a href="{{ designer.get_absolute_url }}">{{ designer.name }}</a>
+			({{ designer.match_set.all.count }} Games)
+		</li>
+		{% endfor %}
+	</ul>
+	{% else %}
+		<p>Error! No matches found.</p>
+	{% endif %}
+{% endblock %}
