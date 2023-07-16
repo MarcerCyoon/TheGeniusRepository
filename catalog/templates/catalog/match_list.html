@@ -6,9 +6,9 @@
 	<ul>
 		{% for match in match_list %}
 		<li>
+			<strong>{{match.match_type}}</strong>:
 			<a href="{{ match.get_absolute_url }}">{{match.title}}</a>
 			({{match.designer}})
-			({{match.match_type}})
 		</li>
 		{% endfor %}
 	</ul>
