@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1 class="mt-3">{{ designer.name }}</h1>
+  <p>{{ designer.desc }}</p>
+  
+  <h2> Games Designed: </h2>
+  <br>
+  {% if designer.match_set.all.count %}
+	<ul>
+		{% for match in designer.match_set.all %}
+		<li>
+			<a href="{{ match.get_absolute_url }}">{{match.title}}</a>
+			({{match.match_type}})
+		</li>
+		{% endfor %}
+	</ul>
+  {% else %}
+	<p>None</p>
+  {% endif %}
+  
+{% endblock %}

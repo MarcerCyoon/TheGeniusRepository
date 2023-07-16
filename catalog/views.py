@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views import generic
 
-from .models import Match
+from .models import Match, Designer
 
 # Create your views here.
 def index(request):
@@ -27,3 +27,6 @@ class MatchDetailView(generic.DetailView):
         context['rule_line_breaks'] = rule_line_breaks
 
         return context
+    
+class DesignerDetailView(generic.DetailView):
+    model = Designer
