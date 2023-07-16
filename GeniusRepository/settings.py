@@ -19,6 +19,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
+from dotenv import load_dotenv
+load_dotenv()
+
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'django-insecure-9p+d*ap1k^n0dh&g%tu8@@s7$%6^5=y7o=v&=okneko9b!0w6o'
 import os
@@ -28,10 +31,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '!8p+d*ap1k^n0dt&g%tu4@@s7$%6^5
 # DEBUG = False
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-
-
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -86,6 +86,11 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# Update database configuration from $DATABASE_URL.
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 
 
 # Password validation

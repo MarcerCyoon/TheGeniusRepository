@@ -12,9 +12,12 @@
   <br>
   <div class="container mr-3">
 	{% for rule in rule_line_breaks %}
-	<!-- TODO: Add image support. If image url is detected (discordapp.net), display in <img> with src to url. -->
-	  <div class="pr-2">{{ rule|markdownify }}</div>
-	  <br>
+    {% if 'media.discordapp.net' in rule %}
+      <img src={{ rule }}>
+    {% else %}
+	    <div class="pr-2">{{ rule|markdownify }}</div>
+    {% endif %}
+    <br>
 	{% endfor %}
   </div>
 
