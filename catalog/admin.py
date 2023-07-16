@@ -6,8 +6,8 @@ from .models import Match, Designer, ORG, Tag
 
 @admin.register(Match)
 class MatchAdmin(admin.ModelAdmin):
-    list_display = ('match_type', 'title', 'designer', 'display_ORGs', 'display_tags')
-    list_display_links = ['title']
+    list_display = ('match_type', 'name', 'designer', 'display_ORGs', 'display_tags')
+    list_display_links = ['name']
     list_filter = ('match_type', 'designer')
 
 admin.site.register(Designer)

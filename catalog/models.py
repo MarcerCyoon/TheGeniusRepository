@@ -3,7 +3,7 @@ from django.urls import reverse
 
 # Create your models here.
 class Match(models.Model):
-    title = models.CharField(max_length=200)
+    name = models.CharField(max_length=200)
     designer = models.ForeignKey('Designer', on_delete=models.SET_NULL, null=True)
     summary = models.TextField(max_length=2000, help_text="Enter a quick summary of the Match here.")
     rules = models.TextField(max_length=30000, help_text='Enter the rules of the Match here.')
@@ -11,16 +11,15 @@ class Match(models.Model):
     tags = models.ManyToManyField('Tag', help_text='Choose tags for this match.')
 
     MATCH_TYPE = (
-        ('MM', 'Main Match'),
         ('DM', 'Death Match'),
-        ('FM', 'Final Match')
+        ('MM', 'Main Match')
     )
 
     match_type = models.CharField(max_length=2, choices=MATCH_TYPE, blank=True)
     num_players = models.IntegerField()
 
     class Meta:
-        ordering = ['match_type', 'title']
+        ordering = ['match_type', 'name']
         verbose_name = 'Match'
         verbose_name_plural = 'Matches'
 
