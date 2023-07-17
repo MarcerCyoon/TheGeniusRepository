@@ -6,7 +6,12 @@
   <p><strong>Summary:</strong> {{ match.summary }}</p>
   <p><strong>Designer:</strong> <a href="{{ match.designer.get_absolute_url }}">{{ match.designer }}</a></p>
   <p><strong>ORGs:</strong> {{ match.ORGs.all|join:", " }}</p>
-  <p><strong>Match Type:</strong> {{ match.match_type }} (for {{ match.num_players }} players)</p>
+  
+  {% if match.max_players %}
+    <p><strong>Match Type:</strong> {{ match.match_type }} (for {{ match.min_players }}~{{ match.max_players }} players)</p>
+  {% else %}
+    <p><strong>Match Type:</strong> {{ match.match_type }} (for {{ match.min_players }} players)</p>
+  {% endif %}
   
   <h2> Rules: </h2>
   <div class="container mr-3">
