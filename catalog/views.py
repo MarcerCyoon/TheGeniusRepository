@@ -47,11 +47,10 @@ class MatchDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super(MatchDetailView, self).get_context_data(**kwargs)
 
-        # split rules by \r\n so that each can be displayed in their own div
-        # and each can be markdownified properly.
+        # split rules by \r\n so that each can be displayed in
+        # their own div and each can be markdownified properly.
         # also, this makes image processing possible as well.
         rule_line_breaks = context['match'].rules.split("\r\n")
-        rule_line_breaks = [rule for rule in rule_line_breaks if rule != ""]
         context['rule_line_breaks'] = rule_line_breaks
 
         return context

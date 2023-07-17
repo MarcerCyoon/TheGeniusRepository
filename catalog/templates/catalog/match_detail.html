@@ -12,12 +12,14 @@
   <br>
   <div class="container mr-3">
 	{% for rule in rule_line_breaks %}
-    {% if 'media.discordapp.net' in rule %}
+    {% if rule == '' %}
+      <br>
+    {% elif 'media.discordapp.net' in rule %}
       <img src={{ rule }}>
     {% else %}
 	    <div class="pr-2">{{ rule|markdownify }}</div>
     {% endif %}
-    <br>
+    
 	{% endfor %}
   </div>
 
