@@ -19,7 +19,7 @@ class Match(models.Model):
     num_players = models.IntegerField()
 
     class Meta:
-        ordering = ['match_type', 'name']
+        ordering = ['-match_type', 'name']
         verbose_name = 'Match'
         verbose_name_plural = 'Matches'
 
@@ -64,7 +64,7 @@ class ORG(models.Model):
     name = models.CharField(max_length=200)
     size = models.IntegerField()
     start_date = models.DateField()
-    end_date = models.DateField()
+    end_date = models.DateField(null=True, blank=True)
     main_host = models.ForeignKey('Designer', on_delete=models.SET_NULL, null=True)
     description = models.CharField(max_length=200, help_text="A short description of this ORG.")
     twists = models.TextField(max_length=1000, help_text="List out all relevant twists of this ORG.")
