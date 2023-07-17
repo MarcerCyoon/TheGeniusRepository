@@ -24,7 +24,7 @@ class Match(models.Model):
         verbose_name_plural = 'Matches'
 
     def __str__(self):
-        return self.title
+        return self.name
     
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this book."""
