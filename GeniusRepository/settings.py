@@ -25,7 +25,8 @@ load_dotenv()
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'django-insecure-9p+d*ap1k^n0dh&g%tu8@@s7$%6^5=y7o=v&=okneko9b!0w6o'
 import os
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '!8p+d*ap1k^n0dt&g%tu4@@s7$%6^5=y7o=v&=okneko9%!0w6k')
+from django.core.management.utils import get_random_secret_key
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
