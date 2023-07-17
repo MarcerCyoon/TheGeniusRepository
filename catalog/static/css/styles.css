@@ -12,3 +12,8 @@ body {
 	margin-left: 0!important;
 	margin-right: 0!important;
 }
+
+/* to not let images in rules just be ridiculously big */
+img {
+    max-height: 400px !important;
+}
