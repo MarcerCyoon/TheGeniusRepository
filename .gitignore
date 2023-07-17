@@ -1,3 +1,8 @@
 *.bak
 *.sqlite3
 .env
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
