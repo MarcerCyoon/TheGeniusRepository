@@ -16,10 +16,11 @@ class Match(models.Model):
     )
 
     match_type = models.CharField(max_length=2, choices=MATCH_TYPE, blank=True)
-    num_players = models.IntegerField()
+    min_players = models.IntegerField(help_text="Minimum number of players needed to play this match.")
+    max_players= models.IntegerField(help_text="Maximum number of players that can play this match. Leave empty if num_players is not a range.", null=True, blank=True)
 
     class Meta:
-        ordering = ['-match_type', 'name']
+        ordering = ['-match_type', 'name'] # reverse match_type order so MMs > DMs
         verbose_name = 'Match'
         verbose_name_plural = 'Matches'
 
@@ -44,7 +45,7 @@ class Match(models.Model):
         Create a string for the tags of this Match.
         Necessary for MatchAdmin list display.
         """
-        return ', '.join(tag.name for tag in self.tags.all()[:3])
+        return ', '.join(tag.name for tag in self.tags.all()[:5])
     
     display_tags.short_description = 'Tags'
 

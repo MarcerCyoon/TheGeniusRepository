@@ -9,19 +9,52 @@
   <p><strong>Match Type:</strong> {{ match.match_type }} (for {{ match.num_players }} players)</p>
   
   <h2> Rules: </h2>
-  <br>
   <div class="container mr-3">
-	{% for rule in rule_line_breaks %}
-    {% if rule == '' %}
-      <br>
-    {% elif 'media.discordapp.net' in rule %}
-      <img src={{ rule }}>
-    {% else %}
-	    <div class="pr-2">{{ rule|markdownify }}</div>
-    {% endif %}
-    
-	{% endfor %}
+    <ul class="nav nav-tabs" id="rulesTab" role="tablist">
+      {% for title in titles %}
+        {% if forloop.first %}
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="rules{{forloop.counter}}-tab" data-toggle="tab" data-target="#rules{{forloop.counter}}" type="button" role="tab" aria-controls="rules{{forloop.counter}}" aria-selected="true">{{title}}</a>
+          </li>
+        {% else %}
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="rules{{forloop.counter}}-tab" data-toggle="tab" data-target="#rules{{forloop.counter}}" type="button" role="tab" aria-controls="rules{{forloop.counter}}" aria-selected="false">{{title}}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+
+    <div class="tab-content" id="rulesTabContent">
+      {% for rule_line_breaks in rulesets_line_breaks %}
+        {% if forloop.first %}
+          <div class="tab-pane fade show active" id="rules{{forloop.counter}}" role="tabpanel" aria-labelledby="rules{{forloop.counter}}-tab">
+              {% for rule in rule_line_breaks %}
+                {% if rule == '' %}
+                  <br>
+                {% elif 'media.discordapp.net' in rule %}
+                  <img src={{ rule }}>
+                {% else %}
+                  <div class="pr-2">{{ rule|markdownify }}</div>
+                {% endif %}
+              {% endfor %}
+          </div>
+        {% else %}
+          <div class="tab-pane fade" id="rules{{forloop.counter}}" role="tabpanel" aria-labelledby="rules{{forloop.counter}}-tab">
+            {% for rule in rule_line_breaks %}
+              {% if rule == '' %}
+                <br>
+              {% elif 'media.discordapp.net' in rule %}
+                <img src={{ rule }}>
+              {% else %}
+                <div class="pr-2">{{ rule|markdownify }}</div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
   </div>
+
 
   <hr>
   <div style="margin-left:20px;margin-top:20px">

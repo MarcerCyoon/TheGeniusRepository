@@ -47,11 +47,22 @@ class MatchDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super(MatchDetailView, self).get_context_data(**kwargs)
 
-        # split rules by \r\n so that each can be displayed in
-        # their own div and each can be markdownified properly.
-        # also, this makes image processing possible as well.
-        rule_line_breaks = context['match'].rules.split("\r\n")
-        context['rule_line_breaks'] = rule_line_breaks
+        # split by pre-chosen divider $%^ to get different rulesets
+        rulesets = context['match'].rules.split("$%^")[1:]
+        titles = rulesets[::2] # all even indices are titles
+        rulesets = rulesets[1::2] # all odd indices are rulesets
+
+        rulesets_line_breaks = []
+
+        for ruleset in rulesets:
+            # split rules by \r\n so that each can be displayed in
+            # their own div and each can be markdownified properly.
+            # also, this makes image processing possible as well.
+            ruleset_line_breaks = ruleset.split("\r\n")
+            rulesets_line_breaks.append(ruleset_line_breaks)
+        
+        context['rulesets_line_breaks'] = rulesets_line_breaks
+        context['titles'] = titles
 
         return context
     
