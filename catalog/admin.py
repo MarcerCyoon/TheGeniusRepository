@@ -18,15 +18,28 @@ class MatchResource(resources.ModelResource):
         designer_name = row["designer"]
         Designer.objects.get_or_create(name=designer_name, defaults={"name": designer_name, "desc": "TBD"})
 
+        tags = row["Tags"]
+        for tag_name in tags.split(", "):
+            # create tags that don't exist
+            Tag.objects.get_or_create(name=tag_name, defaults={"name": tag_name})
+
     designer = fields.Field(
         column_name='designer',
         attribute='designer',
         widget=ForeignKeyWidget(Designer, field='name'))
     
-    orgs = fields.Field(
+    ORGs = fields.Field(
         column_name='orgs',
         attribute='ORGs',
         widget=ManyToManyWidget(ORG, field='name', separator='|')
+    )
+
+    # TODO: Tags need a custom fields.Field too lol
+
+    tags = fields.Field(
+        column_name='Tags',
+        attribute='tags',
+        widget=ManyToManyWidget(Tag, field='name', separator=', ')
     )
 
     class Meta:
