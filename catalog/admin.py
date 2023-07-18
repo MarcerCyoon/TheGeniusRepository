@@ -59,13 +59,13 @@ class MatchAdmin(ImportExportModelAdmin):
     resource_classes = [MatchResource]
     list_display = ('match_type', 'name', 'designer', 'display_ORGs', 'display_tags')
     list_display_links = ['name']
-    list_filter = ('match_type', 'designer')
+    list_filter = ('match_type', 'designer', 'ORGs')
 
 admin.site.register(Designer)
 
 @admin.register(ORG)
 class ORGAdmin(ImportExportModelAdmin):
     resource_classes = [ORGResource]
-    list_displayer = ('name', 'main_host', 'start_date', 'end_date')
+    list_display = ('name', 'main_host', 'start_date', 'end_date')
 
 admin.site.register(Tag)
