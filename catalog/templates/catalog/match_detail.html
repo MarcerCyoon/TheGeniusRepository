@@ -2,10 +2,10 @@
 {% load markdownify %}
 
 {% block content %}
-  <h1 class="mt-3">{{ match.name }}</h1>
+  <h1 class="mt-3 mb-2">{{ match.name }}</h1>
   <p><strong>Summary:</strong> {{ match.summary }}</p>
   <p><strong>Designer:</strong> <a href="{{ match.designer.get_absolute_url }}">{{ match.designer }}</a></p>
-  <p><strong>ORGs:</strong> {{ match.ORGs.all|join:", " }}</p>
+  <p><strong>Featured in:</strong> {{ match.ORGs.all|join:", " }}</p>
   
   {% if match.max_players %}
     <p><strong>Match Type:</strong> {{ match.match_type }} (for {{ match.min_players }}~{{ match.max_players }} players)</p>
