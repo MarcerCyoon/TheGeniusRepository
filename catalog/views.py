@@ -58,7 +58,7 @@ class MatchDetailView(generic.DetailView):
             # split rules by \r\n so that each can be displayed in
             # their own div and each can be markdownified properly.
             # also, this makes image processing possible as well.
-            ruleset_line_breaks = ruleset.split("\r\n")
+            ruleset_line_breaks = ruleset.replace("\r\n", "\n").split("\n")
             rulesets_line_breaks.append(ruleset_line_breaks)
         
         context['rulesets_line_breaks'] = rulesets_line_breaks

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'catalog.apps.CatalogConfig', # new app
     'markdownify.apps.MarkdownifyConfig', # markdown app
+    'import_export', # bulk import-export app
 ]
 
 MIDDLEWARE = [
@@ -138,6 +139,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+# import-export safety settings
+IMPORT_EXPORT_ESCAPE_HTML_ON_EXPORT = True
+IMPORT_EXPORT_ESCAPE_FORMULAE_ON_EXPORT = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
