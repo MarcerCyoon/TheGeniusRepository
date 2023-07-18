@@ -6,7 +6,15 @@
   <p><strong>Summary:</strong> {{ match.summary }}</p>
   <p><strong>Designer:</strong> <a href="{{ match.designer.get_absolute_url }}">{{ match.designer }}</a></p>
   {% comment %} TODO: make each ORG hyperlink to ORG page {% endcomment %}
-  <p><strong>Featured in:</strong> {{ match.ORGs.all|join:", " }}</p>
+  <p><strong>Featured in:</strong>
+    {% for org in match.ORGs.all %}
+      {% if forloop.last %}
+        <a href="{{ org.get_absolute_url }}">{{ org.name }}</a>
+      {% else %}
+        <a href="{{ org.get_absolute_url }}">{{ org.name }}</a>, 
+      {% endif %}
+    {% endfor %}
+  </p>
   
   {% if match.max_players %}
     <p><strong>Match Type:</strong> {{ match.match_type }} (for {{ match.min_players }}~{{ match.max_players }} players)</p>
