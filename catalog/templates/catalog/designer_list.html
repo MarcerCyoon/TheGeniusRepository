@@ -5,10 +5,12 @@
 	{% if designer_list %}
 	<ul>
 		{% for designer in designer_list %}
-		<li>
-			<a href="{{ designer.get_absolute_url }}">{{ designer.name }}</a>
-			({{ designer.match_set.all.count }} Games)
-		</li>
+			{% if designer.match_set.all.count %}
+				<li>
+					<a href="{{ designer.get_absolute_url }}">{{ designer.name }}</a>
+					({{ designer.match_set.all.count }} Games)
+				</li>
+			{% endif %}
 		{% endfor %}
 	</ul>
 	{% else %}

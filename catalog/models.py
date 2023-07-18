@@ -77,9 +77,12 @@ class ORG(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def get_absolute_url(self):
+        return reverse("org-detail", args=[str(self.id)])
 
 class Tag(models.Model):
-    name = models.CharField(max_length=200, help_text='Enter a tag (e.g. \'social deduction\' or \'bidding game\')')
+    name = models.CharField(max_length=200, help_text='Enter a tag (e.g. \'social deduction\' or \'bidding\')')
 
     def __str__(self):
         return self.name

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views import generic
 from django.db.models import Q
 
-from .models import Match, Designer
+from .models import Match, Designer, ORG
 
 # Create your views here.
 def index(request):
@@ -41,6 +41,9 @@ class MatchListView(generic.ListView):
 class DesignerListView(generic.ListView):
     model = Designer
 
+class ORGListView(generic.ListView):
+    model = ORG
+
 class MatchDetailView(generic.DetailView):
     model = Match
 
@@ -68,3 +71,15 @@ class MatchDetailView(generic.DetailView):
     
 class DesignerDetailView(generic.DetailView):
     model = Designer
+
+class ORGDetailView(generic.DetailView):
+    model = ORG
+
+    def get_context_data(self, **kwargs):
+        context = super(ORGDetailView, self).get_context_data(**kwargs)
+
+        # split by \n
+        twists = context['org'].twists.split("\n")
+        context['twists'] = twists
+
+        return context

@@ -12,6 +12,22 @@
 		</li>
 		{% endfor %}
 	</ul>
+
+	{% comment %} <table>
+	{% for match in match_list %}
+		<tr>
+			<td>
+				<strong>{{ match.match_type }}</strong>: <a href="{{ match.get_absolute_url }}">{{ match.name }}</a>
+			</td>
+			<td>
+				{{ match.designer }}
+			</td>
+			<td>
+				{{ match.display_ORGs }}
+			</td>
+		</tr>
+		{% endfor %}
+	</table> {% endcomment %}
 	{% else %}
 		<p>Error! No matches found.</p>
 	{% endif %}

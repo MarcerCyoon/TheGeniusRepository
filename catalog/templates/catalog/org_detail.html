@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1 class="mt-3">{{ org.name }}</h1>
+  <p><i>{{ org.description }}</i></p>
+  <p class="mb-0"><strong>Twists:</strong></p>
+  <p class="mt-0">
+	{% for twist in twists %}
+		{{twist}}
+		<br>
+	{% endfor %}
+  </p>
+  
+  <h2> Games Featured: </h2>
+  {% if org.match_set.all.count %}
+	<ul>
+		{% for match in org.match_set.all %}
+		<li>
+			<strong>{{match.match_type}}</strong>:
+			<a href="{{ match.get_absolute_url }}">{{ match.name }}</a>
+		</li>
+		{% endfor %}
+	</ul>
+  {% else %}
+	<p>None</p>
+  {% endif %}
+  
+{% endblock %}
