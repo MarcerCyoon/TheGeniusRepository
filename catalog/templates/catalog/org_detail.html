@@ -18,7 +18,7 @@
 		<li>
 			<strong>{{match.match_type}}</strong>:
 			<a href="{{ match.get_absolute_url }}">{{ match.name }}</a>
-			({{ match.designer }})
+			({{ match.designers.all|join:', ' }})
 		</li>
 		{% endfor %}
 	</ul>

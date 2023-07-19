@@ -3,8 +3,6 @@ from import_export.admin import ImportExportModelAdmin
 from import_export import fields, resources
 from import_export.widgets import ForeignKeyWidget, ManyToManyWidget, DateWidget
 
-import datetime
-
 from .models import Match, Designer, ORG, Tag
 
 # Register your models here.
