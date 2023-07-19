@@ -23,10 +23,10 @@ class MatchResource(resources.ModelResource):
             # create tags that don't exist
             Tag.objects.get_or_create(name=tag_name, defaults={"name": tag_name})
 
-    designer = fields.Field(
+    designers = fields.Field(
         column_name='designer',
-        attribute='designer',
-        widget=ForeignKeyWidget(Designer, field='name'))
+        attribute='designers',
+        widget=ManyToManyWidget(Designer, field='name', separator=', '))
     
     ORGs = fields.Field(
         column_name='orgs',
@@ -70,9 +70,9 @@ class ORGResource(resources.ModelResource):
 @admin.register(Match)
 class MatchAdmin(ImportExportModelAdmin):
     resource_classes = [MatchResource]
-    list_display = ('match_type', 'name', 'designer', 'display_ORGs', 'display_tags')
+    list_display = ('match_type', 'name', 'display_designers', 'display_ORGs', 'display_tags')
     list_display_links = ['name']
-    list_filter = ('match_type', 'designer', 'ORGs')
+    list_filter = ('match_type', 'designers', 'ORGs')
 
 admin.site.register(Designer)
 

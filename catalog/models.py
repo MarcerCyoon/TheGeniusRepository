@@ -4,7 +4,7 @@ from django.urls import reverse
 # Create your models here.
 class Match(models.Model):
     name = models.CharField(max_length=200)
-    designer = models.ForeignKey('Designer', on_delete=models.SET_NULL, null=True)
+    designers = models.ManyToManyField('Designer', verbose_name="Designer(s)")
     summary = models.TextField(max_length=2000, help_text="Enter a quick summary of the Match here.")
     rules = models.TextField(max_length=30000, help_text='Enter the rules of the Match here.')
     ORGs = models.ManyToManyField('ORG', verbose_name="ORGs", help_text="Choose all ORGs this Match has appeared in.")
@@ -15,7 +15,7 @@ class Match(models.Model):
         ('MM', 'Main Match')
     )
 
-    match_type = models.CharField(max_length=2, choices=MATCH_TYPE, blank=True)
+    match_type = models.CharField(max_length=2, choices=MATCH_TYPE)
     min_players = models.IntegerField(help_text="Minimum number of players needed to play this match.")
     max_players= models.IntegerField(help_text="Maximum number of players that can play this match. Leave empty if num_players is not a range.", null=True, blank=True)
 
@@ -30,6 +30,15 @@ class Match(models.Model):
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this book."""
         return reverse('match-detail', args=[str(self.id)])
+    
+    def display_designers(self):
+        """
+        Create a string for all designers that designed this Match.
+        Necessary for MatchAdmin list display.
+        """
+        return ', '.join(designer.name for designer in self.designers.all()[:3])
+
+    display_designers.short_description = 'Designer(s)'
     
     def display_ORGs(self):
         """
