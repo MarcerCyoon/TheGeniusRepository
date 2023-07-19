@@ -23,7 +23,7 @@ class SearchView(generic.ListView):
 
         if query is not None:
             object_list = Match.objects.filter(
-                Q(name__icontains=query) | Q(tags__name__icontains=query) | Q(designer__name__icontains=query)
+                Q(name__icontains=query) | Q(tags__name__icontains=query) | Q(designers__name__icontains=query)
             ).distinct()
             return object_list
         else:
