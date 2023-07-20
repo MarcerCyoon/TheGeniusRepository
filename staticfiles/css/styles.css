@@ -15,6 +15,6 @@ body {
 
 /* to not let images in rules just be ridiculously big */
 img {
-    max-height: 400px !important;
+	max-height: 400px !important;
 	max-width: 100% !important;
 }
