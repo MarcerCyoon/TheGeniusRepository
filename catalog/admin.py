@@ -13,8 +13,9 @@ class MatchResource(resources.ModelResource):
     # designer, ORG and can just use name
 
     def before_import_row(self, row, **kwargs):
-        designer_name = row["designer"]
-        Designer.objects.get_or_create(name=designer_name, defaults={"name": designer_name, "desc": "TBD"})
+        designer_names = row["designer"]
+        for designer_name in designer_names.split(", "):
+            Designer.objects.get_or_create(name=designer_name, defaults={"name": designer_name, "desc": "TBD"})
 
         tags = row["Tags"]
         for tag_name in tags.split(", "):
