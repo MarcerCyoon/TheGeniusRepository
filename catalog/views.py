@@ -22,9 +22,13 @@ class SearchView(generic.ListView):
         query = self.request.GET.get("q")
 
         if query is not None:
-            object_list = Match.objects.filter(
-                Q(name__icontains=query) | Q(tags__name__icontains=query) | Q(designers__name__icontains=query)
-            ).distinct()
+
+            object_list = Match.objects.all()
+
+            for q in query.split(" "):
+                object_list = object_list.filter(
+                    Q(name__icontains=q) | Q(tags__name__icontains=q) | Q(designers__name__icontains=q)
+                ).distinct()
             return object_list
         else:
             return Match.objects.none()
