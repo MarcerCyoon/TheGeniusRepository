@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import generic
-from django.db.models import Q
+from django.db.models import Q, Count
 
 from .models import Match, Designer, ORG
 
@@ -44,6 +44,11 @@ class MatchListView(generic.ListView):
 
 class DesignerListView(generic.ListView):
     model = Designer
+
+    def get_context_data(self, **kwargs):
+        context = super(DesignerListView, self).get_context_data(**kwargs)
+        context['sorted_designer_list'] = context['designer_list'].annotate(num_matches=Count('match')).order_by("-num_matches")
+        return context
 
 class ORGListView(generic.ListView):
     model = ORG

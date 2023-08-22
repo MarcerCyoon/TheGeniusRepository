@@ -4,7 +4,7 @@
 	<h1 class="mt-3">List of The Genius Designers</h1>
 	{% if designer_list %}
 	<ul>
-		{% for designer in designer_list %}
+		{% for designer in sorted_designer_list %}
 			{% if designer.match_set.all.count %}
 				<li>
 					<a href="{{ designer.get_absolute_url }}">{{ designer.name }}</a>
