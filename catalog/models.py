@@ -28,7 +28,7 @@ class Match(models.Model):
         return self.name
     
     def get_absolute_url(self):
-        """Returns the URL to access a detail record for this book."""
+        """Returns the URL to access a detail record for this match."""
         return reverse('match-detail', args=[str(self.id)])
     
     def display_designers(self):

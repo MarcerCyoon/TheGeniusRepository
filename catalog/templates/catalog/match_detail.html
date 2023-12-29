@@ -53,7 +53,7 @@
               {% for rule in rule_line_breaks %}
                 {% if rule == '' %}
                   <br>
-                {% elif '.discordapp.' in rule %}
+                {% elif '.discordapp.' in rule or '.imgur.' in rule %}
                   <img src={{ rule }}>
                 {% else %}
                   <div class="pr-2">{{ rule|markdownify }}</div>
@@ -65,7 +65,7 @@
             {% for rule in rule_line_breaks %}
               {% if rule == '' %}
                 <br>
-              {% elif '.discordapp.' in rule %}
+              {% elif '.discordapp.' in rule or '.imgur.' in rule %}
                 <img src={{ rule }}>
               {% else %}
                 <div class="pr-2">{{ rule|markdownify }}</div>

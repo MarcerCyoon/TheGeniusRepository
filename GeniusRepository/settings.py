@@ -148,3 +148,13 @@ IMPORT_EXPORT_ESCAPE_FORMULAE_ON_EXPORT = True
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+MARKDOWNIFY = {
+    "default": {
+        "MARKDOWN_EXTENSIONS": [
+            "fenced_code",
+            "md_in_html"
+        ]
+    }
+}
