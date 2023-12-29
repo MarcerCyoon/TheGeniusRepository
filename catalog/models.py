@@ -69,6 +69,9 @@ class Designer(models.Model):
     def get_absolute_url(self):
         return reverse("designer-detail", args=[str(self.id)])
     
+    class Meta:
+        ordering = ['name']
+    
 
 class ORG(models.Model):
     name = models.CharField(max_length=200)
@@ -95,3 +98,6 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+    
+    class Meta:
+        ordering = ['name']
