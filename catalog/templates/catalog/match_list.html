@@ -14,20 +14,26 @@
 	</ul>
 
 	{% comment %} <table>
+		<tr>
+			<th>Game</th>
+			<th>Designer(s)</th>
+			<th>Player Count</th>
+		</tr>
 	{% for match in match_list %}
 		<tr>
 			<td>
 				<strong>{{ match.match_type }}</strong>: <a href="{{ match.get_absolute_url }}">{{ match.name }}</a>
 			</td>
 			<td>
-				{{ match.designer }}
+				{{ match.designers.all|join:', ' }}
 			</td>
 			<td>
-				{{ match.display_ORGs }}
+				{{ match.min_players }}
 			</td>
 		</tr>
 		{% endfor %}
 	</table> {% endcomment %}
+	
 	{% else %}
 		<p>Error! No matches found.</p>
 	{% endif %}

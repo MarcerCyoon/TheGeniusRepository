@@ -3,8 +3,8 @@
 
 {% block content %}
   <h1 class="mt-3 mb-2">{{ match.name }}</h1>
-  <p><strong>Summary:</strong> {{ match.summary }}</p>
-  <p><strong>Designer(s):</strong>
+  <p style="margin-bottom: 0.8rem"><strong>Summary:</strong> {{ match.summary }}</p>
+  <p style="margin-bottom: 0.8rem"><strong>Designer(s):</strong>
     {% for designer in match.designers.all %}
       {% if forloop.last %}
         <a href="{{ designer.get_absolute_url }}">{{ designer.name }}</a>
@@ -13,7 +13,7 @@
       {% endif %}
     {% endfor %}
   </p>
-  <p><strong>Featured in:</strong>
+  <p style="margin-bottom: 0.8rem"><strong>Featured in:</strong>
     {% for org in match.ORGs.all %}
       {% if forloop.last %}
         <a href="{{ org.get_absolute_url }}">{{ org.name }}</a>
@@ -24,9 +24,9 @@
   </p>
   
   {% if match.max_players %}
-    <p><strong>Match Type:</strong> {{ match.match_type }} (for {{ match.min_players }}~{{ match.max_players }} players)</p>
+    <p style="margin-bottom: 0.8rem"><strong>Match Type:</strong> {{ match.match_type }} (for {{ match.min_players }}~{{ match.max_players }} players)</p>
   {% else %}
-    <p><strong>Match Type:</strong> {{ match.match_type }} (for {{ match.min_players }} players)</p>
+    <p style="margin-bottom: 0.8rem"><strong>Match Type:</strong> {{ match.match_type }} (for {{ match.min_players }} players)</p>
   {% endif %}
   
   <h2> Rules: </h2>
