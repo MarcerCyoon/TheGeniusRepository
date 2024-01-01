@@ -149,12 +149,32 @@ IMPORT_EXPORT_ESCAPE_FORMULAE_ON_EXPORT = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 MARKDOWNIFY = {
     "default": {
         "MARKDOWN_EXTENSIONS": [
             "fenced_code",
             "md_in_html"
+        ],
+        "WHITELIST_TAGS": [
+            'a',
+            'abbr',
+            'acronym',
+            'b',
+            'blockquote',
+            'code',
+            'em',
+            'h1',
+            'h2',
+            'h3',
+            'h4',
+            'h5',
+            'h6',
+            'i',
+            'li',
+            'ol',
+            'p',
+            'strong',
+            'ul'
         ]
     }
 }
