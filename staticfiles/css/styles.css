@@ -22,3 +22,7 @@ img {
 a {
 	color: rgb(25, 25, 107);
 }
+
+p {
+	margin-bottom: 0.3rem;
+}
