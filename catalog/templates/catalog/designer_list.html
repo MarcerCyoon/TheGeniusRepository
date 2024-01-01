@@ -8,7 +8,11 @@
 			{% if designer.match_set.all.count %}
 				<li>
 					<a href="{{ designer.get_absolute_url }}">{{ designer.name }}</a>
-					({{ designer.match_set.all.count }} Games)
+					{% if designer.match_set.all.count != 1%}
+					 	({{ designer.match_set.all.count }} Games)
+					{% else %}
+						({{ designer.match_set.all.count }} Game)
+					{% endif %}
 				</li>
 			{% endif %}
 		{% endfor %}
