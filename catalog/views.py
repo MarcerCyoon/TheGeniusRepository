@@ -57,6 +57,7 @@ class MatchDetailView(generic.DetailView):
     model = Match
 
     def get_context_data(self, **kwargs):
+        import re, copy
         context = super(MatchDetailView, self).get_context_data(**kwargs)
 
         # split by pre-chosen divider $%^ to get different rulesets
@@ -72,6 +73,62 @@ class MatchDetailView(generic.DetailView):
             # also, this makes image processing possible as well.
             ruleset_line_breaks = ruleset.replace("\r\n", "\n").split("\n")
             rulesets_line_breaks.append(ruleset_line_breaks)
+
+        # let's re-join together some things that need it for proper rendering.
+        for ruleset in rulesets_line_breaks:
+            begin = -1
+            end = -1
+            copy_ruleset = copy.copy(ruleset) # make a copy of the ruleset so we don't have to deal with index shenanigans
+
+            # re-join together ordered lists
+            for rule in copy_ruleset:
+                if re.match("[0-9]+.", rule) is not None:
+                    if begin == -1:
+                        begin = rule
+                        end = rule
+                    else:
+                        end = rule
+                else:
+                    if begin != -1:
+                        b = ruleset.index(begin)
+                        e = ruleset.index(end)
+                        ruleset[b:e+1] = ['\n'.join(ruleset[b:e+1])]
+                        begin = -1
+                        end = -1
+            else:
+                if begin != -1:
+                    b = ruleset.index(begin)
+                    e = ruleset.index(end)
+                    ruleset[b:e+1] = ['\n'.join(ruleset[b:e+1])]
+                    begin = -1
+                    end = -1
+
+            # then, re-join together unordered lists
+            begin = -1
+            end = -1
+            for rule in copy_ruleset:
+                if rule.startswith("- "):
+                    if begin == -1:
+                        begin = rule
+                        end = rule
+                    else:
+                        end = rule
+                else:
+                    if begin != -1:
+                        b = ruleset.index(begin)
+                        e = ruleset.index(end)
+                        ruleset[b:e+1] = ['\n'.join(ruleset[b:e+1])]
+                        begin = -1
+                        end = -1
+            else:
+                if begin != -1:
+                    b = ruleset.index(begin)
+                    e = ruleset.index(end)
+                    ruleset[b:e+1] = ['\n'.join(ruleset[b:e+1])]
+                    begin = -1
+                    end = -1
+
+            # i apologize for bad coding
         
         context['rulesets_line_breaks'] = rulesets_line_breaks
         context['titles'] = titles

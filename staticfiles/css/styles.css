@@ -23,6 +23,6 @@ a {
 	color: rgb(25, 25, 107);
 }
 
-p {
+p, ul, ol {
 	margin-bottom: 0.2rem;
 }
