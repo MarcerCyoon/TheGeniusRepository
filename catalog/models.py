@@ -6,7 +6,7 @@ class Match(models.Model):
     name = models.CharField(max_length=200)
     designers = models.ManyToManyField('Designer', verbose_name="Designer(s)")
     summary = models.TextField(max_length=2000, help_text="Enter a quick summary of the Match here.")
-    rules = models.TextField(max_length=30000, help_text='Enter the rules of the Match here.')
+    rules = models.TextField(max_length=50000, help_text='Enter the rules of the Match here.')
     ORGs = models.ManyToManyField('ORG', verbose_name="ORGs", help_text="Choose all ORGs this Match has appeared in.")
     tags = models.ManyToManyField('Tag', help_text='Choose tags for this match.', blank=True)
 
