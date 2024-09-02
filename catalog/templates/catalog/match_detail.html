@@ -2,8 +2,73 @@
 {% load markdownify %}
 
 {% block content %}
-  <h1 class="mt-3 mb-2">{{ match.name }}</h1>
-  <p style="margin-bottom: 0.8rem; text-align: center;"><strong>Designer(s):</strong>
+  <h1 class="mt-3 mb-1">{{ match.name }}</h1>
+  <p style="margin-bottom: 0.8rem; text-align: center;">{{ match.summary }}</p>
+
+  <table class="table table-primary table-sm table-striped table-small mx-auto" style="text-align: center; vertical-align: center;">
+    <tr style="height: 50px;">
+      <td>
+        <strong>Designer(s):</strong>
+        {% for designer in match.designers.all %}
+          {% if forloop.last %}
+            <a href="{{ designer.get_absolute_url }}">{{ designer.name }}</a>
+          {% else %}
+            <a href="{{ designer.get_absolute_url }}">{{ designer.name }}</a>, 
+          {% endif %}
+        {% endfor %}
+      </td>
+      <td>
+        {% if match.max_players %}
+          <strong>Match Type:</strong> {{ match.match_type }} (for {{ match.min_players }}~{{ match.max_players }} players)
+        {% else %}
+          <strong>Match Type:</strong> {{ match.match_type }} (for {{ match.min_players }} players)
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <strong>Featured in:</strong>
+          {% for org in match.ORGs.all %}
+            {% if forloop.last %}
+              <a href="{{ org.get_absolute_url }}">{{ org.name }}</a>
+            {% else %}
+              <a href="{{ org.get_absolute_url }}">{{ org.name }}</a>, 
+            {% endif %}
+          {% endfor %}
+      </td>
+    </tr>
+    {% if match.awards.all %}
+      <tr>
+        <td colspan="2">
+          <strong>Awards:</strong>
+            {% for award in match.awards.all %}
+              {% if forloop.last %}
+                <span>{{ award }}</span>
+              {% else %}
+                <span>{{ award }}</span>, 
+              {% endif %}
+            {% endfor %}
+        </td>
+      </tr>
+    {% endif %}
+    {% if match.see_also.all %}
+      <tr>
+        <td colspan="2">
+          <strong>See Also:</strong>
+            {% for match in match.see_also.all %}
+              {% if forloop.last %}
+                <a href="{{ match.get_absolute_url }}">{{ match.name }}</a>
+              {% else %}
+                <a href="{{ match.get_absolute_url }}">{{ match.name }}</a>, 
+              {% endif %}
+            {% endfor %}
+        </td>
+      </tr>
+    {% endif %}
+    
+  </table>
+
+  {% comment %} <p style="margin-bottom: 0.8rem; text-align: center;"><strong>Designer(s):</strong>
     {% for designer in match.designers.all %}
       {% if forloop.last %}
         <a href="{{ designer.get_absolute_url }}">{{ designer.name }}</a>
@@ -11,15 +76,15 @@
         <a href="{{ designer.get_absolute_url }}">{{ designer.name }}</a>, 
       {% endif %}
     {% endfor %}
-  </p>
+  </p> {% endcomment %}
 
-  {% if match.max_players %}
+  {% comment %} {% if match.max_players %}
     <p style="margin-bottom: 0.8rem; text-align: center;"><strong>Match Type:</strong> {{ match.match_type }} (for {{ match.min_players }}~{{ match.max_players }} players)</p>
   {% else %}
     <p style="margin-bottom: 0.8rem; text-align: center;"><strong>Match Type:</strong> {{ match.match_type }} (for {{ match.min_players }} players)</p>
-  {% endif %}
+  {% endif %} {% endcomment %}
 
-  <p style="margin-bottom: 0.8rem; text-align: center;"><strong>Featured in:</strong>
+  {% comment %} <p style="margin-bottom: 0.8rem; text-align: center;"><strong>Featured in:</strong>
     {% for org in match.ORGs.all %}
       {% if forloop.last %}
         <a href="{{ org.get_absolute_url }}">{{ org.name }}</a>
@@ -27,9 +92,9 @@
         <a href="{{ org.get_absolute_url }}">{{ org.name }}</a>, 
       {% endif %}
     {% endfor %}
-  </p>
+  </p> {% endcomment %}
   
-  {% if match.see_also.all %}
+  {% comment %} {% if match.see_also.all %}
     <p style="margin-bottom: 0.8rem; text-align: center;"><strong>See Also:</strong>
       {% for match in match.see_also.all %}
         {% if forloop.last %}
@@ -41,7 +106,19 @@
     </p>
   {% endif %}
 
-  <p style="margin-bottom: 0.8rem; text-align: center;"><strong>Summary:</strong> {{ match.summary }}</p>
+  {% if match.awards.all %}
+    <p style="margin-bottom: 0.8rem; text-align: center;"><strong>Awards:</strong>
+      {% for award in match.awards.all %}
+        {% if forloop.last %}
+          <span>{{ award }}</span>
+        {% else %}
+          <span>{{ award }}</span>, 
+        {% endif %}
+      {% endfor %}
+    </p>
+  {% endif %}
+
+  <p style="margin-bottom: 0.8rem; text-align: center;"><strong>Summary:</strong> {{ match.summary }}</p> {% endcomment %}
   
   <div class="container mt-4 mr-3">
     <ul class="nav nav-tabs" id="rulesTab" role="tablist">

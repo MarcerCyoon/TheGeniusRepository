@@ -3,7 +3,7 @@ from import_export.admin import ImportExportModelAdmin
 from import_export import fields, resources
 from import_export.widgets import ForeignKeyWidget, ManyToManyWidget, DateWidget
 
-from .models import Match, Designer, ORG, Tag
+from .models import Match, Designer, ORG, Tag, Award, YearAward
 
 # Register your models here.
 
@@ -81,3 +81,8 @@ class ORGAdmin(ImportExportModelAdmin):
     list_display = ('name', 'main_host', 'start_date', 'end_date')
 
 admin.site.register(Tag)
+
+admin.site.register(Award)
+
+admin.site.register(YearAward)
+

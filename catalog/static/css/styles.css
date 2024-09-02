@@ -17,9 +17,9 @@ body {
   vertical-align: middle;
 }
 
-/* .table-small {
-	width: 45%
-} */
+.table-small {
+	width: 55%;
+}
 
 .tab-color {
 	color:rgb(0, 0, 0)

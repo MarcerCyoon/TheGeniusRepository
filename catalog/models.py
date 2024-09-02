@@ -20,6 +20,7 @@ class Match(models.Model):
     max_players= models.IntegerField(help_text="Maximum number of players that can play this match. Leave empty if num_players is not a range.", null=True, blank=True)
 
     see_also = models.ManyToManyField('Match', help_text="Note games that are inspired by or are similar to this game.", verbose_name="See Also", blank=True)
+    awards = models.ManyToManyField('YearAward', help_text='Choose all awards this design has won.', blank=True)
 
     class Meta:
         ordering = ['-match_type', 'name'] # reverse match_type order so MMs > DMs
@@ -74,7 +75,6 @@ class Designer(models.Model):
     class Meta:
         ordering = ['name']
     
-
 class ORG(models.Model):
     name = models.CharField(max_length=200)
     size = models.IntegerField()
@@ -114,6 +114,15 @@ class YearAward(models.Model):
 
     year = models.IntegerField(choices=YEAR_CHOICES, default=datetime.datetime.now().year)
 
+    def __str__(self):
+        return self.award.name + " " + str(self.year)
+
 class Award(models.Model):
     name = models.CharField(max_length=200, help_text="Enter the name of this award (e.g. \'Most Fun MM\').")
     description = models.CharField(max_length=1000, help_text='Enter the description of this award.')
+
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        ordering = ['name']
