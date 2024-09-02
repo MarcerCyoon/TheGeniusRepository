@@ -44,9 +44,9 @@
 			<td>
 				{{ match.min_players }}
 			</td>
-			<td>
-				<image src="https://i.imgur.com/6JcNCRN.png" title="Strategy" alt="Strategy" width="10%" height="10%"></image>
-				{% comment %} {{match.tags.1|join:', '}} {% endcomment %}
+			<td style="font-size: 10px;">
+				{% comment %} <image src="https://i.imgur.com/6JcNCRN.png" title="Strategy" alt="Strategy" width="10%" height="10%"></image> {% endcomment %}
+				{{match.tags.all|join:', '}}
 			</td>
 		</tr>
 		{% endfor %}
