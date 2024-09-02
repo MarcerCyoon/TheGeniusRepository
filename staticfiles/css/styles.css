@@ -13,6 +13,10 @@ body {
 	margin-right: 0!important;
 }
 
+.table-small {
+	width: 50%
+}
+
 /* to not let images in rules just be ridiculously big */
 img {
 	max-height: 400px !important;
@@ -21,6 +25,7 @@ img {
 
 a {
 	color: rgb(25, 25, 107);
+	text-decoration: none;
 }
 
 p, ul, ol {

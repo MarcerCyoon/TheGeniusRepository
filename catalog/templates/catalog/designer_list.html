@@ -3,7 +3,7 @@
 {% block content %}
 	<h1 class="mt-3">List of The Genius Designers</h1>
 	{% if designer_list %}
-	<ul>
+	{% comment %} <ul>
 		{% for designer in sorted_designer_list %}
 			{% if designer.match_set.all.count %}
 				<li>
@@ -16,7 +16,36 @@
 				</li>
 			{% endif %}
 		{% endfor %}
-	</ul>
+	</ul> {% endcomment %}
+
+	<table class="sortable table table-secondary table-sm table-striped table-bordered table-hover">
+		<thead class="table-dark">
+			<tr>
+				<th>Name</th>
+				<th>Games Designed</th>
+				<th>ORGs Designed For</th>
+			</tr>
+		</thead>
+	{% for designer in sorted_designer_list %}
+		{% if designer.match_set.all.count %}
+			<tr>
+				<td>
+					<a href="{{ designer.get_absolute_url }}">{{ designer.name }}</a>
+				</td>
+				<td>
+					{% if designer.match_set.all.count != 1%}
+						{{ designer.match_set.all.count }} Games
+					{% else %}
+						{{ designer.match_set.all.count }} Game
+					{% endif %}
+				</td>
+				<td>
+					{{ designer.org_set.all|join:', ' }}
+				</td>
+			</tr>
+		{% endif %}
+		{% endfor %}
+	</table>
 	{% else %}
 		<p>Error! No designers found.</p>
 	{% endif %}

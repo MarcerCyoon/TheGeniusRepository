@@ -3,7 +3,7 @@
 {% block content %}
 	<h1 class="mt-3">List of The Genius ORGs</h1>
 	{% if org_list %}
-	<ul>
+	{% comment %} <ul>
 		{% for org in org_list %}
 			{% if org.match_set.all.count %}
 				<li>
@@ -12,7 +12,40 @@
 				</li>
 			{% endif %}
 		{% endfor %}
-	</ul>
+	</ul> {% endcomment %}
+	<table class="sortable table table-secondary table-sm table-striped table-bordered table-hover">
+		<thead class="table-dark">
+			<tr>
+				<th>Name</th>
+				<th>Host</th>
+				<th>Start Date</th>
+				<th>End Date</th>
+			</tr>
+		</thead>
+	{% for org in org_list %}
+		{% if org.match_set.all.count %}
+		<tr>
+			<td>
+				<a href="{{ org.get_absolute_url }}">{{ org.name }}</a>
+			</td>
+			<td>
+				{{ org.main_host }}
+			</td>
+			<td>
+				{{ org.start_date }}
+			</td>
+			<td>
+				{% if org.end_date %}
+					{{ org.end_date }}
+				{% else %}
+					<strong>Ongoing</strong>
+				{% endif %}
+			</td>
+		</tr>
+		{% endif %}
+	{% endfor %}
+	</table>
+
 	{% else %}
 		<p>Error! No ORGs found.</p>
 	{% endif %}

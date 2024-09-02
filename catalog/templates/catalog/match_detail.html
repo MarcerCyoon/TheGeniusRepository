@@ -3,8 +3,7 @@
 
 {% block content %}
   <h1 class="mt-3 mb-2">{{ match.name }}</h1>
-  <p style="margin-bottom: 0.8rem"><strong>Summary:</strong> {{ match.summary }}</p>
-  <p style="margin-bottom: 0.8rem"><strong>Designer(s):</strong>
+  <p style="margin-bottom: 0.8rem; text-align: center;"><strong>Designer(s):</strong>
     {% for designer in match.designers.all %}
       {% if forloop.last %}
         <a href="{{ designer.get_absolute_url }}">{{ designer.name }}</a>
@@ -13,7 +12,14 @@
       {% endif %}
     {% endfor %}
   </p>
-  <p style="margin-bottom: 0.8rem"><strong>Featured in:</strong>
+
+  {% if match.max_players %}
+    <p style="margin-bottom: 0.8rem; text-align: center;"><strong>Match Type:</strong> {{ match.match_type }} (for {{ match.min_players }}~{{ match.max_players }} players)</p>
+  {% else %}
+    <p style="margin-bottom: 0.8rem; text-align: center;"><strong>Match Type:</strong> {{ match.match_type }} (for {{ match.min_players }} players)</p>
+  {% endif %}
+
+  <p style="margin-bottom: 0.8rem; text-align: center;"><strong>Featured in:</strong>
     {% for org in match.ORGs.all %}
       {% if forloop.last %}
         <a href="{{ org.get_absolute_url }}">{{ org.name }}</a>
@@ -23,23 +29,30 @@
     {% endfor %}
   </p>
   
-  {% if match.max_players %}
-    <p style="margin-bottom: 0.8rem"><strong>Match Type:</strong> {{ match.match_type }} (for {{ match.min_players }}~{{ match.max_players }} players)</p>
-  {% else %}
-    <p style="margin-bottom: 0.8rem"><strong>Match Type:</strong> {{ match.match_type }} (for {{ match.min_players }} players)</p>
+  {% if match.see_also.all %}
+    <p style="margin-bottom: 0.8rem; text-align: center;"><strong>See Also:</strong>
+      {% for match in match.see_also.all %}
+        {% if forloop.last %}
+          <a href="{{ match.get_absolute_url }}">{{ match.name }}</a>
+        {% else %}
+          <a href="{{ match.get_absolute_url }}">{{ match.name }}</a>, 
+        {% endif %}
+      {% endfor %}
+    </p>
   {% endif %}
+
+  <p style="margin-bottom: 0.8rem; text-align: center;"><strong>Summary:</strong> {{ match.summary }}</p>
   
-  <h2> Rules: </h2>
-  <div class="container mr-3">
+  <div class="container mt-4 mr-3">
     <ul class="nav nav-tabs" id="rulesTab" role="tablist">
       {% for title in titles %}
         {% if forloop.first %}
           <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="rules{{forloop.counter}}-tab" data-toggle="tab" data-target="#rules{{forloop.counter}}" type="button" role="tab" aria-controls="rules{{forloop.counter}}" aria-selected="true">{{title}}</a>
+            <button class="nav-link active tab-color" id="rules{{forloop.counter}}-tab" data-bs-toggle="tab" data-bs-target="#rules{{forloop.counter}}" type="button" role="tab" aria-controls="rules{{forloop.counter}}" aria-selected="true">{{title}}</a>
           </li>
         {% else %}
           <li class="nav-item" role="presentation">
-            <button class="nav-link" id="rules{{forloop.counter}}-tab" data-toggle="tab" data-target="#rules{{forloop.counter}}" type="button" role="tab" aria-controls="rules{{forloop.counter}}" aria-selected="false">{{title}}</a>
+            <button class="nav-link tab-color" id="rules{{forloop.counter}}-tab" data-bs-toggle="tab" data-bs-target="#rules{{forloop.counter}}" type="button" role="tab" aria-controls="rules{{forloop.counter}}" aria-selected="false">{{title}}</a>
           </li>
         {% endif %}
       {% endfor %}
@@ -53,7 +66,7 @@
                 {% if rule == '' %}
                   <br>
                 {% elif '.discordapp.' in rule or '.imgur.' in rule %}
-                  <img src={{ rule }}>
+                  <div class="text-center"><img src={{ rule }}></div>
                 {% else %}
                   <div class="pr-2">{{ rule|markdownify }}</div>
                 {% endif %}
@@ -65,7 +78,7 @@
               {% if rule == '' %}
                 <br>
               {% elif '.discordapp.' in rule or '.imgur.' in rule %}
-                <img src={{ rule }}>
+              <div class="text-center"><img class="img-thumbnail" src={{ rule }}></div>
               {% else %}
                 <div class="pr-2">{{ rule|markdownify }}</div>
               {% endif %}

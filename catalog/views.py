@@ -4,6 +4,34 @@ from django.db.models import Q, Count
 
 from .models import Match, Designer, ORG
 
+
+def parse_query(query: str):
+    """
+    Helper function that parses a text query into
+    a dictionary object 
+    """
+    criteria = query.split(" ")
+    dct = {}
+
+    # TODO: implement OR/AND
+
+    for criterion in criteria:
+        if "=" in criterion:
+            field, search = criterion.split("=")
+            if field in dct:
+                dct[field].append(search.replace('"', '').replace("'", "")) # get rid of quotes
+            else:
+                dct[field] = [search.replace('"', '').replace("'", "")] # get rid of quotes
+
+        else:
+            if "name" in dct:
+                dct['name'].append(criterion)
+            else:
+                dct['name'] = [criterion]
+
+    return dct
+
+
 # Create your views here.
 def index(request):
     num_matches = Match.objects.all().count()
@@ -23,12 +51,22 @@ class SearchView(generic.ListView):
 
         if query is not None:
 
+            dct = parse_query(query)
             object_list = Match.objects.all()
 
-            for q in query.split(" "):
-                object_list = object_list.filter(
-                    Q(name__icontains=q) | Q(tags__name__icontains=q) | Q(designers__name__icontains=q)
-                ).distinct()
+            if 'name' in dct:
+                for name in dct["name"]:
+                    object_list = object_list.filter(Q(name__icontains=name))
+            
+            if 'tag' in dct:
+                for tag in dct["tag"]:
+                    object_list = object_list.filter(Q(tags__name__icontains=tag))
+
+            if 'designer' in dct:
+                for designer in dct["designer"]:
+                    object_list = object_list.filter(Q(designers__name__icontains=designer))
+
+            object_list = object_list.distinct()
             return object_list
         else:
             return Match.objects.none()
@@ -59,6 +97,12 @@ class MatchDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         import re, copy
         context = super(MatchDetailView, self).get_context_data(**kwargs)
+
+        # TODO: support underline and spoiler-text (https://stackoverflow.com/questions/28615544/how-can-i-create-spoiler-text)
+        # TODO: also support nicer codeblocks? pink is ugly, and give it a nice background shade
+        # TODO: add emoji support too :sob:
+        # TODO: delete the newline that exists at the end of non-final variants like wtf
+        # maybe just delete all trailing elements that are just empty
 
         # split by pre-chosen divider $%^ to get different rulesets
         rulesets = context['match'].rules.split("$%^")[1:]

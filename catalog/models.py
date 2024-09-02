@@ -19,6 +19,8 @@ class Match(models.Model):
     min_players = models.IntegerField(help_text="Minimum number of players needed to play this match.")
     max_players= models.IntegerField(help_text="Maximum number of players that can play this match. Leave empty if num_players is not a range.", null=True, blank=True)
 
+    see_also = models.ManyToManyField('Match', help_text="Note games that are inspired by or are similar to this game.", verbose_name="See Also", blank=True)
+
     class Meta:
         ordering = ['-match_type', 'name'] # reverse match_type order so MMs > DMs
         verbose_name = 'Match'
@@ -95,6 +97,7 @@ class ORG(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(max_length=200, help_text='Enter a tag (e.g. \'social deduction\' or \'bidding\')')
+    description = models.CharField(max_length=1000, help_text='Enter a description for the tag.', null=True, blank=True)
 
     def __str__(self):
         return self.name
