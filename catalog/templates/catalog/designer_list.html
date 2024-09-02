@@ -8,7 +8,7 @@
 				<tr>
 					<th width="18%">Name</th>
 					<th width="7%"># Games</th>
-					<th width="75%"># ORGs</th>
+					<th width="75%">Hosted ORGs</th>
 				</tr>
 			</thead>
 		{% for designer in sorted_designer_list %}
@@ -21,6 +21,10 @@
 						{{ designer.match_set.all.count }}
 					</td>
 					<td>
+						{% comment %} {% for match in designer.match_set.all|join:', ' %}
+							{{ match.ORGs.all|join:', ' }}
+						TODO: make it so it lists all ORGs that feature their designs
+						{{ designer.match_set.all|join:', ' }} {% endcomment %}
 						{{ designer.org_set.all|join:', ' }}
 					</td>
 				</tr>
