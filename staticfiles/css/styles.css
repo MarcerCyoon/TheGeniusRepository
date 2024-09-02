@@ -13,21 +13,96 @@ body {
 	margin-right: 0!important;
 }
 
-.table-small {
-	width: 50%
+.table {
+  vertical-align: middle;
 }
+
+/* .table-small {
+	width: 45%
+} */
+
+.tab-color {
+	color:rgb(0, 0, 0)
+}
+
+.tab-color:hover {
+	color: rgba(25, 25, 107, 1);
+}
+
+/* .ul_hover:hover {
+	text-decoration: underline;
+} */
 
 /* to not let images in rules just be ridiculously big */
 img {
-	max-height: 400px !important;
-	max-width: 100% !important;
+    max-height: 400px !important;
+	  max-width: 100% !important;
 }
 
 a {
-	color: rgb(25, 25, 107);
+	color: rgba(25, 25, 107, 1);
 	text-decoration: none;
+}
+
+a:hover {
+	/* color: rgba(25, 25, 107, 0.8); */
+	text-decoration: underline;
 }
 
 p, ul, ol {
 	margin-bottom: 0.2rem;
+}
+
+h1 {
+	font-size: 3rem;
+	font-weight: bolder;
+	text-align: center;
+}
+
+.tag:hover + .tag_hide {
+  visibility: visible;
+  color: #5d5d5d;
+  transition: 0.4s;
+}
+
+.tag_hide {
+  visibility: hidden;
+  color: rgb(214, 212, 212);
+}
+
+.navbar-brand {
+  display: inline-block;
+  padding: 2px 0px 5px 5px;
+}
+
+@media screen and (min-width: 992px) {
+  .navbar {
+    padding: 0;
+  }
+  .navbar .navbar-nav .nav-link {
+    padding: 1em 0;
+	  text-decoration: none;
+  }
+  .navbar .navbar-nav .nav-item {
+    margin: 0 1em;
+  }
+}
+
+.navbar .navbar-nav .nav-item {
+  position: relative;
+}
+.navbar .navbar-nav .nav-item::after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  content: "";
+  background-color: rgb(55, 143, 175);
+  width: 0%;
+  height: 4px;
+  transition: all 0.5s;
+}
+.navbar .navbar-nav .nav-item:hover::after {
+  width: 100%;
 }

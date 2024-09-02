@@ -19,7 +19,7 @@
     {% block navbar %}
     <nav class="navbar navbar-expand-xl navbar-dark bg-dark">
       <div class="container-fluid">
-        <a class="navbar-brand">The Genius Repository</a>
+        <a class="navbar-brand" href="{% url 'index' %}"><img src="{% static 'images/geniusrepo_logo.png' %}" width="150px" alt="The Genius Repository"></img></a>
 
         <ul class="navbar-nav me-auto">
           <li class="nav-item mr-md-3">

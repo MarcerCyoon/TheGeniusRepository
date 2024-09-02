@@ -70,13 +70,18 @@ h1 {
   color: rgb(214, 212, 212);
 }
 
+.navbar-brand {
+  display: inline-block;
+  padding: 2px 0px 5px 5px;
+}
+
 @media screen and (min-width: 992px) {
   .navbar {
     padding: 0;
   }
   .navbar .navbar-nav .nav-link {
     padding: 1em 0;
-	text-decoration: none;
+	  text-decoration: none;
   }
   .navbar .navbar-nav .nav-item {
     margin: 0 1em;
