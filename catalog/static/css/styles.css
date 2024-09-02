@@ -36,7 +36,7 @@ body {
 /* to not let images in rules just be ridiculously big */
 img {
     max-height: 400px !important;
-	max-width: 100% !important;
+	  max-width: 100% !important;
 }
 
 a {
@@ -57,6 +57,17 @@ h1 {
 	font-size: 3rem;
 	font-weight: bolder;
 	text-align: center;
+}
+
+.tag:hover + .tag_hide {
+  visibility: visible;
+  color: #5d5d5d;
+  transition: 0.4s;
+}
+
+.tag_hide {
+  visibility: hidden;
+  color: rgb(214, 212, 212);
 }
 
 @media screen and (min-width: 992px) {

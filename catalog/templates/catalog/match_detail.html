@@ -96,7 +96,10 @@
 
     {% for tag in match.tags.all %}
 	    <hr>
-	    <p>{{ tag }}</p>
+	    <p>
+        <span class="tag">{{ tag.name }}</span>
+        <span class="tag_hide">&nbsp;&nbsp;&nbsp;({{tag.description}})</span>
+      </p>
     {% endfor %}
     <br>
   </div>
