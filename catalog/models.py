@@ -104,3 +104,16 @@ class Tag(models.Model):
     
     class Meta:
         ordering = ['name']
+
+class YearAward(models.Model):
+    award = models.ForeignKey("Award", on_delete=models.SET_NULL, null=True)
+    import datetime
+    YEAR_CHOICES = []
+    for r in range(2010, (datetime.datetime.now().year+1)):
+        YEAR_CHOICES.append((r,r))
+
+    year = models.IntegerField(choices=YEAR_CHOICES, default=datetime.datetime.now().year)
+
+class Award(models.Model):
+    name = models.CharField(max_length=200, help_text="Enter the name of this award (e.g. \'Most Fun MM\').")
+    description = models.CharField(max_length=1000, help_text='Enter the description of this award.')
