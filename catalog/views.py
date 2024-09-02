@@ -77,7 +77,7 @@ class SearchView(generic.ListView):
                     # https://stackoverflow.com/questions/3300944/can-i-use-django-f-objects-with-string-concatenation
                     # took stuff from here I guess and tinkered with it until it did what I wanted it to
                     # (namely concatenate the award name and the year so that the contains search could operate on both at once)
-                    object_list = object_list.annotate(award_name=Concat(F('awards__award__name'), Value(' '), F('awards__year'), output_field=CharField())).filter(Q(award_name__icontains=award))
+                    object_list = object_list.alias(award_name=Concat(F('awards__award__name'), Value(' '), F('awards__year'), output_field=CharField())).filter(Q(award_name__icontains=award))
 
             if 'type' in dct:
                 for type in dct["type"]:
@@ -86,7 +86,9 @@ class SearchView(generic.ListView):
                     if type.upper() == "DM":
                         object_list = object_list.filter(Q(match_type__iexact="DM"))
 
+            print(object_list)
             object_list = object_list.distinct()
+            print(object_list)
             return object_list
         else:
             return Match.objects.none()
