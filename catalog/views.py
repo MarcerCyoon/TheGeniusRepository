@@ -2,7 +2,8 @@ import shlex
 
 from django.shortcuts import render
 from django.views import generic
-from django.db.models import Q, Count
+from django.db.models import F, Q, Value, Count, CharField
+from django.db.models.functions import Concat
 
 from .models import Match, Designer, ORG, Award
 
@@ -69,6 +70,21 @@ class SearchView(generic.ListView):
             if 'designer' in dct:
                 for designer in dct["designer"]:
                     object_list = object_list.filter(Q(designers__name__icontains=designer))
+
+            if 'award' in dct:
+                for award in dct["award"]:
+                    # going to be real with you I don't know how the fuck this works but it does.
+                    # https://stackoverflow.com/questions/3300944/can-i-use-django-f-objects-with-string-concatenation
+                    # took stuff from here I guess and tinkered with it until it did what I wanted it to
+                    # (namely concatenate the award name and the year so that the contains search could operate on both at once)
+                    object_list = object_list.annotate(award_name=Concat(F('awards__award__name'), Value(' '), F('awards__year'), output_field=CharField())).filter(Q(award_name__icontains=award))
+
+            if 'type' in dct:
+                for type in dct["type"]:
+                    if type.upper() == "MM":
+                        object_list = object_list.filter(Q(match_type__iexact="MM"))
+                    if type.upper() == "DM":
+                        object_list = object_list.filter(Q(match_type__iexact="DM"))
 
             object_list = object_list.distinct()
             return object_list
