@@ -1,16 +1,20 @@
+import shlex
+
 from django.shortcuts import render
 from django.views import generic
 from django.db.models import Q, Count
 
-from .models import Match, Designer, ORG
-
+from .models import Match, Designer, ORG, Award
 
 def parse_query(query: str):
     """
     Helper function that parses a text query into
     a dictionary object 
     """
-    criteria = query.split(" ")
+
+    query = query.replace("“", "\"").replace("‘", "'") # replace mobile version of quotes with standard ones
+    criteria = shlex.split(query) # shlex.split() preserves quotes
+    # criteria = query.split(" ")
     dct = {}
 
     # TODO: implement OR/AND
@@ -29,8 +33,8 @@ def parse_query(query: str):
             else:
                 dct['name'] = [criterion]
 
+    print(dct)
     return dct
-
 
 # Create your views here.
 def index(request):
@@ -90,6 +94,11 @@ class DesignerListView(generic.ListView):
 
 class ORGListView(generic.ListView):
     model = ORG
+
+# TODO: Awards List and Detail View
+
+class AwardListView(generic.ListView):
+    model = Award
 
 class MatchDetailView(generic.DetailView):
     model = Match
