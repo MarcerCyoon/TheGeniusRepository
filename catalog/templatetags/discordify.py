@@ -1,0 +1,54 @@
+from django import template
+from django.template.defaultfilters import stringfilter
+from django.utils.safestring import mark_safe
+
+register = template.Library()
+
+def parse_underlines(value):
+	lst = value.split("__")
+
+	if len(lst) > 2:
+		string = ""
+		for i in range(0, len(lst)):
+			string += lst[i]
+
+			if i != len(lst) - 1:
+				if i % 2 == 0:
+					string += "<u>"
+				else:
+					string += "</u>"
+		
+		return string
+	else:
+		return "__".join(lst)
+
+def parse_spoilers(value):
+	lst = value.split("||")
+
+	if len(lst) > 2:
+		string = ""
+		for i in range(0, len(lst)):
+			string += lst[i]
+
+			if i != len(lst) - 1:
+				if i % 2 == 0:
+					string += '<span class="spoiler">'
+				else:
+					string += "</span>"
+					
+		return string
+	else:
+		return "||".join(lst)
+	
+@register.filter
+@stringfilter
+def discordify(value):
+	"""
+	We are going to custom-implement underlines
+	and spoiler text because I am insane.
+	"""
+	
+	html = parse_underlines(value)
+	html = parse_spoilers(html)
+
+	return mark_safe(html)

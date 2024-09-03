@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load markdownify %}
+{% load discordify %}
 
 {% block content %}
   <h1 class="mt-3 mb-1">{{ match.name }}</h1>
@@ -93,7 +94,7 @@
                 {% elif '.discordapp.' in rule or '.imgur.' in rule %}
                   <div class="text-center"><img src={{ rule }}></div>
                 {% else %}
-                  <div class="pr-2">{{ rule|markdownify }}</div>
+                  <div class="pr-2">{{ rule|discordify|markdownify }}</div>
                 {% endif %}
               {% endfor %}
           </div>
@@ -103,9 +104,9 @@
               {% if rule == '' %}
                 <br>
               {% elif '.discordapp.' in rule or '.imgur.' in rule %}
-              <div class="text-center"><img class="img-thumbnail" src={{ rule }}></div>
+                <div class="text-center"><img src={{ rule }}></div>
               {% else %}
-                <div class="pr-2">{{ rule|markdownify }}</div>
+                <div class="pr-2">{{ rule|discordify|markdownify }}</div>
               {% endif %}
             {% endfor %}
           </div>

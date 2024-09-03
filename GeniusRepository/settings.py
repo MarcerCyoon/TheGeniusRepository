@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'catalog.apps.CatalogConfig', # new app
     'markdownify.apps.MarkdownifyConfig', # markdown app
     'import_export', # bulk import-export app
+    'catalog.templatetags.discordify'
 ]
 
 MIDDLEWARE = [
@@ -174,7 +175,14 @@ MARKDOWNIFY = {
             'ol',
             'p',
             'strong',
-            'ul'
-        ]
+            'ul',
+            'img',
+            'u', # these exist to make discordify work
+            'span' # these exist to make discordify work
+        ],
+        "WHITELIST_ATTRS": {
+            'span': ['class'],
+            'img': ['href']
+        }
     }
 }
