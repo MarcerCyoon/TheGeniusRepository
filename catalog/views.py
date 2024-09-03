@@ -15,6 +15,7 @@ def parse_query(query: str):
 
     query = query.replace("“", "\"").replace("‘", "'") # replace mobile version of quotes with standard ones
     criteria = shlex.split(query) # shlex.split() preserves quotes
+    # TODO: fix bug where single quotes cause server error when used as apostrophes 
     # criteria = query.split(" ")
     dct = {}
 
@@ -27,6 +28,13 @@ def parse_query(query: str):
                 dct[field].append(search.replace('"', '').replace("'", "")) # get rid of quotes
             else:
                 dct[field] = [search.replace('"', '').replace("'", "")] # get rid of quotes
+
+        elif ":" in criterion:
+            field, search = criterion.split(":")
+            if field in dct:
+                dct[field].append(search.replace('"', '').replace("'", "")) # get rid of quotes
+            else:
+                dct[field] = [search.replace('"', '').replace("'", "")] # get rid of quotess
 
         else:
             if "name" in dct:
@@ -78,6 +86,10 @@ class SearchView(generic.ListView):
                     # took stuff from here I guess and tinkered with it until it did what I wanted it to
                     # (namely concatenate the award name and the year so that the contains search could operate on both at once)
                     object_list = object_list.alias(award_name=Concat(F('awards__award__name'), Value(' '), F('awards__year'), output_field=CharField())).filter(Q(award_name__icontains=award))
+
+            if 'org' in dct:
+                for org in dct["org"]:
+                    object_list = object_list.filter(Q(ORGs__name__icontains=org))
 
             if 'type' in dct:
                 for type in dct["type"]:
