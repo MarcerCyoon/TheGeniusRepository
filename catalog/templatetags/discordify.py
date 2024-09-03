@@ -39,12 +39,6 @@ def parse_spoilers(value):
 		return string
 	else:
 		return "||".join(lst)
-	
-def parse_blockquote(value):
-	if value.startswith(">"):
-		value = value.replace(">", "").strip()
-		value = "<blockquote>" + value + "</blockquote>"
-	return value
 
 # TODO: parse emojis properly and display them as small images
 def parse_emojis(value):
@@ -65,6 +59,5 @@ def discordify(value):
 	
 	html = parse_underlines(value)
 	html = parse_spoilers(html)
-	html = parse_blockquote(html)
 
 	return mark_safe(html)

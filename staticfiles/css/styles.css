@@ -44,7 +44,7 @@ body {
 /* make blockquotes look similar to Discord */
 blockquote {
   border-left: 5px solid #8b8b8b;
-  padding: 0.3em 7px;
+  padding: 0.2em 7px;
   margin: 0 0 0rem;
 }
 
@@ -68,6 +68,9 @@ a:hover {
 	text-decoration: underline;
 }
 
+/* This needs to be 0rem for blockquote display to properly work (it needs to look connected).
+I mean, the margins aren't that important as we're using <br> for a lot of our spacing, so.
+Well, I hope nothing broke! */
 p, ul, ol {
 	margin-bottom: 0rem;
 }
