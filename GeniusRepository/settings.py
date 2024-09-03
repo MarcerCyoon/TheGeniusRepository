@@ -177,6 +177,7 @@ MARKDOWNIFY = {
             'strong',
             'ul',
             'img',
+            's',
             'u', # these exist to make discordify work
             'span' # these exist to make discordify work
         ],

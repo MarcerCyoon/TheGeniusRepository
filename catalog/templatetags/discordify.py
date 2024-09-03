@@ -21,6 +21,24 @@ def parse_underlines(value):
 		return string
 	else:
 		return "__".join(lst)
+	
+def parse_strikethrough(value):
+	lst = value.split("~~")
+
+	if len(lst) > 2:
+		string = ""
+		for i in range(0, len(lst)):
+			string += lst[i]
+
+			if i != len(lst) - 1:
+				if i % 2 == 0:
+					string += "<s>"
+				else:
+					string += "</s>"
+		
+		return string
+	else:
+		return "~~".join(lst)
 
 def parse_spoilers(value):
 	lst = value.split("||")
@@ -58,6 +76,7 @@ def discordify(value):
 	"""
 	
 	html = parse_underlines(value)
+	html = parse_strikethrough(html)
 	html = parse_spoilers(html)
 
 	return mark_safe(html)
