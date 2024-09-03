@@ -19,7 +19,7 @@ def parse_query(query: str):
     # criteria = query.split(" ")
     dct = {}
 
-    # TODO: implement OR/AND
+    # TODO: implement NOT/OR/AND
 
     for criterion in criteria:
         if "=" in criterion:
