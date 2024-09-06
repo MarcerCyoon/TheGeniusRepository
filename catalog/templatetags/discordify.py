@@ -101,7 +101,7 @@ def parse_emojis(value):
 						alt = original[start+1:number_start] # we want the alt to be in the form of :thonk: (surrounded by colons)
 						to_be_replaced = original[start:end+1] # to_be_replaced is just the whole string
 						link = f"https://cdn.discordapp.com/emojis/{numbers}.png?size=160"
-						string = f'<img src="{link}" class="emoji mb-1" alt="{alt}"></img>'
+						string = f'<img src="{link}" class="emoji" alt="{alt}"></img>'
 						value = value.replace(to_be_replaced, string)
 					
 					emoji = False

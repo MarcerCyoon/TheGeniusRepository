@@ -42,8 +42,9 @@ body {
 }
 
 .emoji {
-  height: 22px !important;
-  width: 22px !important;
+  height: 20px !important;
+  width: 20px !important;
+  vertical-align: sub;
 }
 
 /* make blockquotes look similar to Discord */
