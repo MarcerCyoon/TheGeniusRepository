@@ -41,6 +41,11 @@ body {
   color: white;
 }
 
+.emoji {
+  height: 22px !important;
+  width: 22px !important;
+}
+
 /* make blockquotes look similar to Discord */
 blockquote {
   border-left: 5px solid #8b8b8b;

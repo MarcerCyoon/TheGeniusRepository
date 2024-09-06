@@ -183,7 +183,7 @@ MARKDOWNIFY = {
         ],
         "WHITELIST_ATTRS": {
             'span': ['class'],
-            'img': ['href']
+            'img': ['src', 'class', 'alt']
         }
     }
 }
