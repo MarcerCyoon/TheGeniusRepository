@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1 class="mt-3">List of The Genius Awards</h1>
+	{% if yearaward_list %}
+	<table class="sortable table table-secondary table-sm table-striped table-bordered table-hover">
+		<thead class="table-dark">
+			<tr>
+				<th width="8%" style="text-align: center;">Year</th>
+				<th>Award</th>
+				<th>Winner</th>
+			</tr>
+		</thead>
+			{% for key, value in sorted_award_dct.items %}
+				<tr style="text-align: center; font-size: 2rem; font-weight: bolder;">
+					<td rowspan="{{ value|length|add:1 }}">
+						{{ key }}
+					</td>
+				</tr>
+				{% for award in value %}
+					<tr>
+						<td>
+							{% if 'MM' in award.award.name %}
+								<strong style="color:#003399;">{{ award.award.name }}</strong>
+							{% else %}
+								<strong style="color:#990000;">{{ award.award.name }}</strong>
+							{% endif %}	
+						</td>
+						<td>
+							{% for match in award.match_set.all %}
+								{% if forloop.last%}
+									<a href="{{ match.get_absolute_url }}">{{ match }}</a> by {{ match.designers.all|join:"/"}}
+								{% else %}
+									<a href="{{ match.get_absolute_url }}">{{ match }}</a> by {{ match.designers.all|join:"/"}}, 
+								{% endif %}
+							{% endfor %}
+						</td>
+					</tr>
+				{% endfor %}
+			{% endfor %}
+	</table>
+	{% else %}
+		<p>Error! No awards found.</p>
+	{% endif %}
+{% endblock %}

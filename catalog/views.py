@@ -5,7 +5,7 @@ from django.views import generic
 from django.db.models import F, Q, Value, Count, CharField
 from django.db.models.functions import Concat
 
-from .models import Match, Designer, ORG, Award
+from .models import Match, Designer, ORG, YearAward
 
 def parse_query(query: str):
     """
@@ -127,8 +127,24 @@ class ORGListView(generic.ListView):
 
 # TODO: Awards List and Detail View
 
-class AwardListView(generic.ListView):
-    model = Award
+class YearAwardListView(generic.ListView):
+    model = YearAward
+
+    def get_context_data(self, **kwargs):
+        context = super(YearAwardListView, self).get_context_data(**kwargs)
+        context['sorted_award_dct'] = {}
+
+        for award in context['yearaward_list'].all():
+            
+            if award.year in context['sorted_award_dct']:
+                context['sorted_award_dct'][award.year].append(award)
+            else:
+                context['sorted_award_dct'][award.year] = [award]
+
+        print(context['sorted_award_dct'])
+
+        return context
+        
 
 class MatchDetailView(generic.DetailView):
     model = Match

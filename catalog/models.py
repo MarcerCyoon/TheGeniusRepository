@@ -117,6 +117,9 @@ class YearAward(models.Model):
     def __str__(self):
         return self.award.name + " " + str(self.year)
 
+    class Meta:
+        ordering = ['year', 'award']
+
 class Award(models.Model):
     name = models.CharField(max_length=200, help_text="Enter the name of this award (e.g. \'Most Fun MM\').")
     description = models.CharField(max_length=1000, help_text='Enter the description of this award.')
