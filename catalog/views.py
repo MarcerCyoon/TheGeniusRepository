@@ -42,7 +42,6 @@ def parse_query(query: str):
             else:
                 dct['name'] = [criterion]
 
-    print(dct)
     return dct
 
 # Create your views here.
@@ -98,9 +97,7 @@ class SearchView(generic.ListView):
                     if type.upper() == "DM":
                         object_list = object_list.filter(Q(match_type__iexact="DM"))
 
-            print(object_list)
             object_list = object_list.distinct()
-            print(object_list)
             return object_list
         else:
             return Match.objects.none()
@@ -135,13 +132,11 @@ class YearAwardListView(generic.ListView):
         context['sorted_award_dct'] = {}
 
         for award in context['yearaward_list'].all():
-            
+
             if award.year in context['sorted_award_dct']:
                 context['sorted_award_dct'][award.year].append(award)
             else:
                 context['sorted_award_dct'][award.year] = [award]
-
-        print(context['sorted_award_dct'])
 
         return context
         
