@@ -111,6 +111,10 @@ class SearchView(generic.ListView):
 class MatchListView(generic.ListView):
     model = Match
 
+    def get_queryset(self):
+        queryset = Match.objects.all().defer('summary', 'rules')
+        return queryset
+
 class DesignerListView(generic.ListView):
     model = Designer
 
@@ -120,11 +124,11 @@ class DesignerListView(generic.ListView):
         context['designer_orgs'] = {}
         
         for designer in context['sorted_designer_list']:
-            if designer.match_set.all().count() > 0:
-                match_list = Match.objects.filter(Q(designers__name__icontains=designer.name))
+            match_list = designer.match_set.all().only('ORGs').prefetch_related('ORGs')
+            if match_list.count() > 0:
                 org_list = []
                 for game in match_list:
-                    for ORG in game.ORGs.all():
+                    for ORG in game.ORGs.all().only('name', 'start_date'):
                         # This is a really crappy way of making sure I can have the ORGs in the right order (by start date).
                         # I just simply save the start date into the list alongside the name, then sort it manually
                         # using the second element later. Then, in the actual HTML, only access the first element for
