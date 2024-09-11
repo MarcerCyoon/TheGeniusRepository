@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load genius_extras %}
+{% load static %}
 
 {% block content %}
 	<h1 class="mt-3">List of The Genius Designers</h1>
@@ -8,7 +10,7 @@
 				<tr>
 					<th width="18%">Name</th>
 					<th width="7%"># Games</th>
-					<th width="75%">Hosted ORGs</th>
+					<th width="75%">ORGs That Feature Their Games</th>
 				</tr>
 			</thead>
 		{% for designer in sorted_designer_list %}
@@ -21,11 +23,11 @@
 						{{ designer.match_set.all.count }}
 					</td>
 					<td>
-						{% comment %} {% for match in designer.match_set.all|join:', ' %}
-							{{ match.ORGs.all|join:', ' }}
-						TODO: make it so it lists all ORGs that feature their designs
-						{{ designer.match_set.all|join:', ' }} {% endcomment %}
-						{{ designer.org_set.all|join:', ' }}
+						{% for org in designer_orgs|lookup:designer.name %}
+							{% with filename=org.0|org_name %}
+								<a href="{{ org.2 }}"><img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon" alt="{{ org.0 }}" title="{{ org.0 }}"></img></a>
+							{% endwith %}
+						{% endfor %}
 					</td>
 				</tr>
 			{% endif %}

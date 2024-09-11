@@ -14,12 +14,36 @@ body {
   max-width: 100%;
 }
 
+/* we are setting min-width to 600px to render proper table column width on mobile. */
 .table {
   vertical-align: middle;
+  min-width: 800px;
 }
 
 .table-small {
 	width: 55%;
+}
+
+.icon {
+  width: 1.7em;
+  height: 1.7em;
+  overflow: hidden;
+  border-radius: 25%;
+}
+
+.icon-lg {
+  width: 2.2rem;
+  height: 2.2rem;
+  overflow: hidden;
+  border-radius: 25%;
+}
+
+.icon-xl {
+  width: 4rem;
+  height: 4rem;
+  overflow: hidden;
+  border-radius: 25%;
+  transform: translate(0%, -3%);
 }
 
 /* tab font color */
@@ -44,7 +68,7 @@ body {
 .emoji {
   height: 20px !important;
   width: 20px !important;
-  vertical-align: sub;
+  transform: translate(0%, -5%);
 }
 
 /* make blockquotes look similar to Discord */
@@ -103,6 +127,12 @@ h1 {
 .navbar-brand {
   display: inline-block;
   padding: 2px 0px 5px 5px;
+}
+
+/* we are setting min-width to 612px to render proper table column width on mobile.
+doing the same to the navbar so the navbar also extends towards the right */
+.navbar {
+  min-width: 812px;
 }
 
 /* this is all for that navbar animation lol */

@@ -112,6 +112,10 @@ def parse_emojis(value):
 
 	return value
 
+@register.filter(name='lookup')
+def lookup(value, key):
+    return value.get(key)
+
 @register.filter
 @stringfilter
 def discordify(value):
@@ -127,3 +131,10 @@ def discordify(value):
 	html = parse_emojis(html)
 
 	return mark_safe(html)
+
+@register.filter
+@stringfilter
+def org_name(value):
+	value = value.replace(":", "").replace("'", "").replace("-", " ")
+	value = [v for v in value.split(" ") if v != ""] # remove empty strings
+	return "_".join(value).lower()

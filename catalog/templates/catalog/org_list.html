@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load genius_extras %}
+{% load static %}
 
 {% block content %}
 	<h1 class="mt-3">List of The Genius ORGs</h1>
@@ -16,6 +18,7 @@
 	<table class="sortable table table-secondary table-sm table-striped table-bordered table-hover">
 		<thead class="table-dark">
 			<tr>
+				<th>Logo</th>
 				<th>Name</th>
 				<th>Host</th>
 				<th>Start Date</th>
@@ -25,12 +28,18 @@
 	{% for org in org_list %}
 		{% if org.match_set.all.count %}
 		<tr>
+			<td style="text-align: center;">
+				{% with filename=org|org_name %}
+					<img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon-lg"></img>
+				{% endwith %}
+			</td>
 			<td>
 				<a href="{{ org.get_absolute_url }}">{{ org.name }}</a>
 			</td>
 			<td>
 				{{ org.main_host }}
 			</td>
+			{% comment %} TODO: sort dates properly using customkey {% endcomment %}
 			<td>
 				{{ org.start_date }}
 			</td>

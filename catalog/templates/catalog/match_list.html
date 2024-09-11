@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load genius_extras %}
+{% load static %}
 
 {% block content %}
 	<h1 class="mt-3">List of The Genius Matches</h1>
@@ -16,11 +18,12 @@
 	<table class="sortable table table-secondary table-sm table-striped table-bordered table-hover">
 		<thead class="table-dark">
 			<tr>
-				<th style="text-align: center" width="5%">Type</th>
-				<th width="35%">Name</th>
-				<th width="35%">Designer(s)</th>
-				<th width="5%">#</th>
-				<th width="20%">Tags</th>
+				<th style="text-align: center; width: 4%;">Type</th>
+				<th style="width: 30%;">Name</th>
+				<th style="width: 28%;">Designer(s)</th>
+				<th style="width: 16%;">ORGs</th>
+				<th style="width: 3%;">#</th>
+				<th style="width: 23%;">Tags</th>
 			</tr>
 		</thead>
 	{% for match in match_list %}
@@ -38,7 +41,14 @@
 			<td>
 				{{ match.designers.all|join:', ' }}
 			</td>
-			<td>
+			<td style="text-align: center;">
+				{% for ORG in match.ORGs.all %}
+					{% with filename=ORG|org_name %}
+						<a href="{{ ORG.get_absolute_url }}"><img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon" alt="{{ ORG }}" title="{{ ORG }}"></img></a>
+					{% endwith %}
+				{% endfor %}
+			</td>
+			<td style="text-align: center;">
 				{{ match.min_players }}
 			</td>
 			<td style="font-size: 10px;">

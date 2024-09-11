@@ -117,12 +117,34 @@ class DesignerListView(generic.ListView):
     def get_context_data(self, **kwargs):
         context = super(DesignerListView, self).get_context_data(**kwargs)
         context['sorted_designer_list'] = context['designer_list'].annotate(num_matches=Count('match')).order_by("-num_matches")
+        context['designer_orgs'] = {}
+        
+        for designer in context['sorted_designer_list']:
+            if designer.match_set.all().count() > 0:
+                match_list = Match.objects.filter(Q(designers__name__icontains=designer.name))
+                org_list = []
+                for game in match_list:
+                    for ORG in game.ORGs.all():
+                        # This is a really crappy way of making sure I can have the ORGs in the right order (by start date).
+                        # I just simply save the start date into the list alongside the name, then sort it manually
+                        # using the second element later. Then, in the actual HTML, only access the first element for
+                        # actual display. Also, the third element stores the URL because now we can't access that easily!
+                        # I love Django! There is almost certainly an easier way to do this, but my hackish method works...
+                        # I think.
+                        org_info = [ORG.name, ORG.start_date, ORG.get_absolute_url()]
+                        if org_info not in org_list: 
+                            org_list.append(org_info)
+
+                org_list.sort(key=lambda x: x[1])
+
+                context['designer_orgs'][designer.name] = org_list
+
         return context
 
 class ORGListView(generic.ListView):
     model = ORG
 
-# TODO: Awards List and Detail View
+# TODO: Awards Detail View
 
 class YearAwardListView(generic.ListView):
     model = YearAward
