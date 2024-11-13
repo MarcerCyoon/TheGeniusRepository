@@ -157,6 +157,10 @@ class ORGListView(generic.ListView):
 class TagListView(generic.ListView):
     model = Tag
 
+    def get_queryset(self):
+        queryset = Tag.objects.all().prefetch_related('match_set')
+        return queryset
+
 # TODO: Awards Detail View
 
 class YearAwardListView(generic.ListView):
