@@ -62,7 +62,6 @@ class SearchView(generic.ListView):
         query = self.request.GET.get("q")
 
         if query is not None:
-
             dct = parse_query(query)
             object_list = Match.objects.all()
 
@@ -109,11 +108,58 @@ class SearchView(generic.ListView):
         return context
 
 class MatchListView(generic.ListView):
+    # paginate_by = 50
     model = Match
 
     def get_queryset(self):
-        queryset = Match.objects.all().defer('summary', 'rules')
+        queryset = Match.objects.all().defer('max_players', 'summary', 'rules').prefetch_related('ORGs').prefetch_related('designers').prefetch_related('tags')
         return queryset
+    
+    def get_context_data(self, **kwargs):
+        context = super(MatchListView, self).get_context_data(**kwargs)
+
+        # add_info = context['match_list'].values('pk', 'ORGs__name', 'designers__name', 'tags__name')
+
+        # final = dict()
+
+        # for q in add_info:
+        #     if q['pk'] in final:
+        #         if q['designers__name'] not in final[q['pk']]['designers'] and q['designers__name'] is not None:
+        #             final[q['pk']]['designers'].append(q['designers__name'])
+
+        #         if q['ORGs__name'] not in final[q['pk']]['orgs'] and q['ORGs__name'] is not None:
+        #             final[q['pk']]['orgs'].append(q['ORGs__name'])
+                
+        #         if q['tags__name'] not in final[q['pk']]['tags'] and q['tags__name'] is not None:
+        #             final[q['pk']]['tags'].append(q['tags__name'])
+
+        #     else:
+        #         final[q['pk']] = {
+        #             'orgs': [],
+        #             'designers': [],
+        #             'tags': []
+        #         }
+
+        #         if q['ORGs__name'] is not None:
+        #             final[q['pk']]['orgs'].append(q['ORGs__name'])
+                
+        #         if q['designers__name'] is not None:
+        #             final[q['pk']]['designers'].append(q['designers__name'])
+                
+        #         if q['tags__name'] is not None:
+        #             print(f"{q['tags__name']} is for some reason not fucking none for {q['pk']}")
+        #             final[q['pk']]['tags'].append(q['tags__name'])
+
+        # for k, v in final.items():
+        #     final[k]['tags'] = ", ".join(v['tags'])
+        #     final[k]['designers'] = ", ".join(v['designers'])
+
+        # print(type(final))
+        # print(final[1])
+
+        # context['add_match_info'] = final
+
+        return context
 
 class DesignerListView(generic.ListView):
     model = Designer

@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Index
 from django.urls import reverse
 
 # Create your models here.
@@ -26,6 +27,9 @@ class Match(models.Model):
         ordering = ['-match_type', 'name'] # reverse match_type order so MMs > DMs
         verbose_name = 'Match'
         verbose_name_plural = 'Matches'
+        indexes = [
+            Index(fields=['name', 'match_type', 'min_players'])
+        ]
 
     def __str__(self):
         return self.name
