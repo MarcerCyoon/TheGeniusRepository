@@ -21,7 +21,7 @@
 				<th style="text-align: center; width: 4%;">Type</th>
 				<th style="width: 30%;">Name</th>
 				<th style="width: 28%;">Designer(s)</th>
-				<th style="width: 16%;">ORGs</th>
+				{% comment %} <th style="width: 16%;">ORGs</th> {% endcomment %}
 				<th style="width: 3%;">#</th>
 				<th style="width: 23%;">Tags</th>
 			</tr>
@@ -41,14 +41,14 @@
 			<td>
 				{{ match.designers.all|join:', ' }}
 			</td>
-			<td style="text-align: center;" sorttable_customkey="{{ match.ORGs.all|join:"_" }}">
+			{% comment %} <td style="text-align: center;" sorttable_customkey="{{ match.ORGs.all|join:"_" }}">
 				{% for ORG in match.ORGs.all %}
-					{{ ORG.name.0 }}
-					{% comment %} {% with filename=ORG|org_name %}
+					{% comment %} {{ ORG.name.0 }}
+					{% with filename=ORG|org_name %}
 						<a href="{{ ORG.get_absolute_url }}"><img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon" alt="{{ ORG }}" title="{{ ORG }}"></img></a>
-					{% endwith %} {% endcomment %}
+					{% endwith %}
 				{% endfor %}
-			</td>
+			</td> {% endcomment %}
 			<td style="text-align: center;">
 				{{ match.min_players }}
 			</td>
