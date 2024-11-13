@@ -108,69 +108,22 @@ class SearchView(generic.ListView):
         return context
 
 class MatchListView(generic.ListView):
-    # paginate_by = 50
     model = Match
 
     def get_queryset(self):
         queryset = Match.objects.all().defer('max_players', 'summary', 'rules').prefetch_related('ORGs').prefetch_related('designers').prefetch_related('tags')
         return queryset
-    
-    def get_context_data(self, **kwargs):
-        context = super(MatchListView, self).get_context_data(**kwargs)
-
-        # add_info = context['match_list'].values('pk', 'ORGs__name', 'designers__name', 'tags__name')
-
-        # final = dict()
-
-        # for q in add_info:
-        #     if q['pk'] in final:
-        #         if q['designers__name'] not in final[q['pk']]['designers'] and q['designers__name'] is not None:
-        #             final[q['pk']]['designers'].append(q['designers__name'])
-
-        #         if q['ORGs__name'] not in final[q['pk']]['orgs'] and q['ORGs__name'] is not None:
-        #             final[q['pk']]['orgs'].append(q['ORGs__name'])
-                
-        #         if q['tags__name'] not in final[q['pk']]['tags'] and q['tags__name'] is not None:
-        #             final[q['pk']]['tags'].append(q['tags__name'])
-
-        #     else:
-        #         final[q['pk']] = {
-        #             'orgs': [],
-        #             'designers': [],
-        #             'tags': []
-        #         }
-
-        #         if q['ORGs__name'] is not None:
-        #             final[q['pk']]['orgs'].append(q['ORGs__name'])
-                
-        #         if q['designers__name'] is not None:
-        #             final[q['pk']]['designers'].append(q['designers__name'])
-                
-        #         if q['tags__name'] is not None:
-        #             print(f"{q['tags__name']} is for some reason not fucking none for {q['pk']}")
-        #             final[q['pk']]['tags'].append(q['tags__name'])
-
-        # for k, v in final.items():
-        #     final[k]['tags'] = ", ".join(v['tags'])
-        #     final[k]['designers'] = ", ".join(v['designers'])
-
-        # print(type(final))
-        # print(final[1])
-
-        # context['add_match_info'] = final
-
-        return context
 
 class DesignerListView(generic.ListView):
     model = Designer
 
     def get_context_data(self, **kwargs):
         context = super(DesignerListView, self).get_context_data(**kwargs)
-        context['sorted_designer_list'] = context['designer_list'].annotate(num_matches=Count('match')).order_by("-num_matches")
+        context['sorted_designer_list'] = context['designer_list'].annotate(num_matches=Count('match')).order_by("-num_matches").prefetch_related('match_set')
         context['designer_orgs'] = {}
         
         for designer in context['sorted_designer_list']:
-            match_list = designer.match_set.all().only('ORGs').prefetch_related('ORGs')
+            match_list = designer.match_set.all().prefetch_related('ORGs').only('ORGs')
             if match_list.count() > 0:
                 org_list = []
                 for game in match_list:
@@ -193,6 +146,11 @@ class DesignerListView(generic.ListView):
 
 class ORGListView(generic.ListView):
     model = ORG
+
+    def get_queryset(self):
+        queryset = ORG.objects.all().prefetch_related('match_set')
+        # queryset = Match.objects.all().defer('max_players', 'summary', 'rules').prefetch_related('ORGs').prefetch_related('designers').prefetch_related('tags')
+        return queryset
 
 # TODO: Awards Detail View
 
