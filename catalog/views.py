@@ -54,6 +54,9 @@ def index(request):
 
     return render(request, 'index.html', context=context)
 
+def about_us(request):
+    return render(request, 'about_us.html')
+
 class SearchView(generic.ListView):
     model = Match
     template_name = "search.html"
