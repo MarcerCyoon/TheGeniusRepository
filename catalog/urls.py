@@ -8,6 +8,7 @@ urlpatterns = [
     path('designers/', views.DesignerListView.as_view(), name='designers'),
 	path('awards/', views.YearAwardListView.as_view(), name='awards'),
     path('orgs/', views.ORGListView.as_view(), name="orgs"),
+	path('tags/', views.TagListView.as_view(), name="tags"),
     path('match/<int:pk>', views.MatchDetailView.as_view(), name='match-detail'),
     path('designer/<int:pk>', views.DesignerDetailView.as_view(), name='designer-detail'),
     path('org/<int:pk>', views.ORGDetailView.as_view(), name="org-detail"),

@@ -5,7 +5,7 @@ from django.views import generic
 from django.db.models import F, Q, Value, Count, CharField
 from django.db.models.functions import Concat
 
-from .models import Match, Designer, ORG, YearAward
+from .models import Match, Designer, ORG, Tag, YearAward
 
 def parse_query(query: str):
     """
@@ -60,6 +60,8 @@ class SearchView(generic.ListView):
 
     def get_queryset(self): 
         query = self.request.GET.get("q")
+        
+        # TODO: optimize this later.
 
         if query is not None:
             dct = parse_query(query)
@@ -96,7 +98,7 @@ class SearchView(generic.ListView):
                     if type.upper() == "DM":
                         object_list = object_list.filter(Q(match_type__iexact="DM"))
 
-            object_list = object_list.distinct()
+            object_list = object_list.distinct().prefetch_related('ORGs').prefetch_related('designers').prefetch_related('tags')
             return object_list
         else:
             return Match.objects.none()
@@ -151,6 +153,9 @@ class ORGListView(generic.ListView):
         queryset = ORG.objects.all().prefetch_related('match_set')
         # queryset = Match.objects.all().defer('max_players', 'summary', 'rules').prefetch_related('ORGs').prefetch_related('designers').prefetch_related('tags')
         return queryset
+
+class TagListView(generic.ListView):
+    model = Tag
 
 # TODO: Awards Detail View
 
@@ -265,9 +270,13 @@ class DesignerDetailView(generic.DetailView):
 class ORGDetailView(generic.DetailView):
     model = ORG
 
+    # def get_queryset(self) -> QuerySet[Any]:
+    #     queryset = .prefetch_related('ORGs').prefetch_related('designers').prefetch_related('tags')
+
+
     def get_context_data(self, **kwargs):
         context = super(ORGDetailView, self).get_context_data(**kwargs)
-
+        # context['org'] = context['org'].prefetch_related('match_set')
         # split by \n
         twists = context['org'].twists.split("\n")
         context['twists'] = twists
