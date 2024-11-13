@@ -114,7 +114,7 @@ def parse_emojis(value):
 
 @register.filter(name='lookup')
 def lookup(value, key):
-    return value.get(key)
+	return value.get(key)
 
 @register.filter
 @stringfilter
