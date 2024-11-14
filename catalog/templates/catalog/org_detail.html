@@ -20,18 +20,55 @@
 		<br>
 	{% endfor %}
   </p>
+
+  <br>
   
-  <h2> Games Featured: </h2>
-  {% if org.match_set.all.count %}
-	<ul>
-		{% for match in org.match_set.all %}
-		<li>
-			<strong>{{match.match_type}}</strong>:
-			<a href="{{ match.get_absolute_url }}">{{ match.name }}</a>
-			({{ match.designers.all|join:', ' }})
-		</li>
+  <h2 style="text-align: center;"> Games Featured: </h2>
+  {% if match_exists %}
+	<table class="sortable table table-secondary table-sm table-striped table-bordered table-hover">
+		<thead class="table-dark">
+			<tr>
+				<th style="text-align: center; width: 4%;">Type</th>
+				<th style="width: 30%;">Name</th>
+				<th style="width: 28%;">Designer(s)</th>
+				<th style="width: 16%;">ORGs</th>
+				<th style="width: 3%;">#</th>
+				<th style="width: 23%;">Tags</th>
+			</tr>
+		</thead>
+		{% for match in match_list %}
+		<tr>
+			<td style="text-align: center;">
+				{% if match.match_type == "MM" %}
+					<strong style="color:#003399;">{{ match.match_type }}</strong>
+				{% else %}
+					<strong style="color:#990000;">{{ match.match_type }}</strong>
+				{% endif %}
+			</td>
+			<td>
+				<a href="{{ match.get_absolute_url }}">{{ match.name }}</a>
+			</td>
+			<td>
+				{{ match.designers.all|join:", " }}
+			</td>
+			<td style="text-align: center;" sorttable_customkey="{{ match.ORGs.all }}">
+				{% for ORG in match.ORGs.all %}
+					{% with filename=ORG|org_name %}
+						<a href="{{ ORG.get_absolute_url }}"><img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon" alt="{{ ORG }}" title="{{ ORG }}"></img></a>
+					{% endwith %}
+				{% endfor %}
+			</td>
+			<td style="text-align: center;">
+				{{ match.min_players }}
+			</td>
+			<td style="font-size: 10px;">
+				{% comment %} <image src="https://i.imgur.com/6JcNCRN.png" title="Strategy" alt="Strategy" width="10%" height="10%"></image> {% endcomment %}
+				{{ match.tags.all|join:", "}}
+			</td>
+		</tr>
 		{% endfor %}
-	</ul>
+	</table>
+
   {% else %}
 	<p>None</p>
   {% endif %}

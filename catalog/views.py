@@ -181,7 +181,6 @@ class YearAwardListView(generic.ListView):
                 context['sorted_award_dct'][award.year] = [award]
 
         return context
-        
 
 class MatchDetailView(generic.DetailView):
     model = Match
@@ -274,16 +273,20 @@ class MatchDetailView(generic.DetailView):
 class DesignerDetailView(generic.DetailView):
     model = Designer
 
+    def get_context_data(self, **kwargs):
+        context = super(DesignerDetailView, self).get_context_data(**kwargs)
+        context['match_list'] = context['designer'].match_set.all().prefetch_related('ORGs').prefetch_related('designers').prefetch_related('tags')
+        context['match_exists'] = len(context['match_list']) > 0
+
+        return context
+
 class ORGDetailView(generic.DetailView):
     model = ORG
 
-    # def get_queryset(self) -> QuerySet[Any]:
-    #     queryset = .prefetch_related('ORGs').prefetch_related('designers').prefetch_related('tags')
-
-
     def get_context_data(self, **kwargs):
         context = super(ORGDetailView, self).get_context_data(**kwargs)
-        # context['org'] = context['org'].prefetch_related('match_set')
+        context['match_list'] = context['org'].match_set.all().prefetch_related('ORGs').prefetch_related('designers').prefetch_related('tags')
+        context['match_exists'] = len(context['match_list']) > 0
         # split by \n
         twists = context['org'].twists.split("\n")
         context['twists'] = twists
