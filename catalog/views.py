@@ -15,6 +15,61 @@ def double_quote_split(value):
     lex.commenters = ''
     return list(lex)
 
+
+SEARCH_FIELDS = ["name", "tag", "designer", "award", "org", "type", "players"]
+
+class Expression:
+    def __init__(self, field: str, operator: str, search: str):
+        """
+        field (operator) search
+        ex. number > =13
+        """
+        # supported search fields
+        if not (field.lower() in SEARCH_FIELDS):
+            raise ValueError
+        
+        # if searching using greater than or lesser than on strings, return error
+        if field != "players" and not (operator in ["!=", "="]):
+            raise ValueError
+        
+        if field.lower() == 'org':
+            # capitalize ORG for pretty print purposes
+            self.field = "ORG"
+        else:
+            self.field = field
+
+        self.operator = operator
+        self.search = search.replace('"', '')
+
+class Query:
+    def __init__(self):
+        self.expressions = []
+
+    def add_expression(self, exp: Expression):
+        self.expressions.append(exp)
+
+    def __str__(self):
+        lst = []
+
+        for exp in self.expressions:
+            if exp.field in ['tag', 'award']:
+                if exp.operator == "=":
+                    lst.append(f"has {exp.search} {exp.field}")
+                else:
+                    lst.append(f"doesn't have {exp.search} {exp.field}")
+
+            elif exp.field == 'players':
+                lst.append(f"{exp.field} {exp.operator} {exp.search}")
+            else:
+                operator_to_verb = {
+                    "=": "is",
+                    "!=": "isn't",
+                }
+
+                lst.append(f"{exp.field} {operator_to_verb[exp.operator]} {exp.search}")
+        
+        return ", ".join(lst)
+
 def parse_query(query: str):
     """
     Helper function that parses a text query into
@@ -25,37 +80,47 @@ def parse_query(query: str):
 
     # double_quote_split preserves double-quotes
     criteria = double_quote_split(query) 
-    dct = {}
+    query_obj = Query()
 
     # TODO: implement NOT/OR/AND
 
+    # TODO: implement searching for player count by expanding the
+    # data structure to dict of dicts to allow for more information
+    # to be encoded (namely, is it = or > or <?)
+
+    invalid_query = False
+
     for criterion in criteria:
-        if "=" in criterion:
-            field, search = criterion.split("=")
-            
-            if field in dct:
-                # get rid of quotes
-                dct[field].append(search.replace('"', ''))
+        try:
+            if "!=" in criterion:
+                field, search = criterion.split("!=")
+                exp = Expression(field, "!=", search)
+            elif ">=" in criterion:
+                field, search = criterion.split(">=")
+                exp = Expression(field, ">=", search)
+            elif "<=" in criterion:
+                field, search = criterion.split("<=")
+                exp = Expression(field, "<=", search)
+            elif ">" in criterion:
+                field, search = criterion.split(">")
+                exp = Expression(field, ">", search)
+            elif "<" in criterion:
+                field, search = criterion.split("<")
+                exp = Expression(field, "<", search)
+            elif "=" in criterion:
+                field, search = criterion.split("=")
+                exp = Expression(field, "=", search)
+            elif ":" in criterion:
+                field, search = criterion.split(":")
+                exp = Expression(field, "=", search)
             else:
-                # get rid of quotes
-                dct[field] = [search.replace('"', '')]
-
-        elif ":" in criterion:
-            field, search = criterion.split(":")
-            if field in dct:
-                # get rid of quotes
-                dct[field].append(search.replace('"', ''))
-            else:
-                # get rid of quotes
-                dct[field] = [search.replace('"', '')]
-
+                exp = Expression("name", "=", criterion)
+        except ValueError:
+            invalid_query = True
         else:
-            if "name" in dct:
-                dct['name'].append(criterion)
-            else:
-                dct['name'] = [criterion]
+            query_obj.add_expression(exp)
 
-    return dct
+    return query_obj, invalid_query
 
 # Create your views here.
 def index(request):
@@ -76,43 +141,67 @@ class SearchView(generic.ListView):
 
     def get_queryset(self): 
         query = self.request.GET.get("q")
-        
-        # TODO: optimize this later.
 
         if query is not None:
-            dct = parse_query(query)
+            query_obj, _ = parse_query(query)
             object_list = Match.objects.all()
-
-            if 'name' in dct:
-                for name in dct["name"]:
-                    object_list = object_list.filter(Q(name__icontains=name))
             
-            if 'tag' in dct:
-                for tag in dct["tag"]:
-                    object_list = object_list.filter(Q(tags__name__icontains=tag))
+            for exp in query_obj.expressions:
+                if exp.field == 'name':
+                    if exp.operator == "=":
+                        object_list = object_list.filter(Q(name__icontains=exp.search))
+                    else:
+                        object_list = object_list.filter(~Q(name__icontains=exp.search))
+                
+                elif exp.field == 'tag':
+                    if exp.operator == "=":
+                        object_list = object_list.filter(Q(tags__name__icontains=exp.search))
+                    else:
+                        object_list = object_list.filter(~Q(tags__name__icontains=exp.search))
 
-            if 'designer' in dct:
-                for designer in dct["designer"]:
-                    object_list = object_list.filter(Q(designers__name__icontains=designer))
+                elif exp.field == 'designer':
+                    if exp.operator == "=":
+                        object_list = object_list.filter(Q(designers__name__icontains=exp.search))
+                    else:
+                        object_list = object_list.filter(~Q(designers__name__icontains=exp.search))
 
-            if 'award' in dct:
-                for award in dct["award"]:
-                    # going to be real with you I don't know how the fuck this works but it does.
-                    # https://stackoverflow.com/questions/3300944/can-i-use-django-f-objects-with-string-concatenation
-                    # took stuff from here I guess and tinkered with it until it did what I wanted it to
-                    # (namely concatenate the award name and the year so that the contains search could operate on both at once)
-                    object_list = object_list.alias(award_name=Concat(F('awards__award__name'), Value(' '), F('awards__year'), output_field=CharField())).filter(Q(award_name__icontains=award))
+                elif exp.field == 'award':
+                    if exp.operator == "=":
+                        object_list = object_list.alias(award_name=Concat(F('awards__award__name'), Value(' '), F('awards__year'), output_field=CharField())).filter(Q(award_name__icontains=exp.search))
+                    else:
+                        object_list = object_list.alias(award_name=Concat(F('awards__award__name'), Value(' '), F('awards__year'), output_field=CharField())).filter(~Q(award_name__icontains=exp.search))
 
-            if 'org' in dct:
-                for org in dct["org"]:
-                    object_list = object_list.filter(Q(ORGs__name__icontains=org))
+                elif exp.field == 'ORG':
+                    if exp.operator == "=":
+                        object_list = object_list.filter(Q(ORGs__name__icontains=exp.search))
+                    else:
+                        object_list = object_list.filter(~Q(ORGs__name__icontains=exp.search))
 
-            if 'type' in dct:
-                for type in dct["type"]:
-                    if type.upper() == "MM":
-                        object_list = object_list.filter(Q(match_type__iexact="MM"))
-                    if type.upper() == "DM":
-                        object_list = object_list.filter(Q(match_type__iexact="DM"))
+                elif exp.field == 'type':
+                    if exp.operator == "=":
+                        if exp.search.upper() == "MM":
+                            object_list = object_list.filter(Q(match_type__iexact="MM"))
+                        if exp.search.upper() == "DM":
+                            object_list = object_list.filter(Q(match_type__iexact="DM"))
+                    else:
+                        if exp.search.upper() == "MM":
+                            object_list = object_list.filter(Q(match_type__iexact="DM"))
+                        if exp.search.upper() == "DM":
+                            object_list = object_list.filter(Q(match_type__iexact="MM"))
+
+                elif exp.field == 'players':
+                    if exp.operator == ">":
+                        object_list = object_list.filter(Q(min_players__gt=exp.search))
+                    elif exp.operator == "<":
+                        object_list = object_list.filter(Q(min_players__lt=exp.search))
+                    elif exp.operator == ">=":
+                        object_list = object_list.filter(Q(min_players__gte=exp.search))
+                    elif exp.operator == "<=":
+                        object_list = object_list.filter(Q(min_players__lte=exp.search))
+                    elif exp.operator == "!=":
+                        object_list = object_list.filter(~Q(min_players__exact=exp.search))
+                    else:
+                        object_list = object_list.filter(Q(min_players__exact=exp.search))
 
             object_list = object_list.distinct().prefetch_related('ORGs').prefetch_related('designers').prefetch_related('tags')
             return object_list
@@ -122,7 +211,14 @@ class SearchView(generic.ListView):
     def get_context_data(self, **kwargs):
         # necessary to add query to context to display on results
         context = super(SearchView, self).get_context_data(**kwargs)
-        context['query'] = self.request.GET.get('q')
+        query = self.request.GET.get("q")
+
+        if query:
+            context['query'], context['invalid_query'] = parse_query(self.request.GET.get('q'))
+
+            if str(context['query']) == "":
+                context['query'] = "empty query"
+
         return context
 
 class MatchListView(generic.ListView):
