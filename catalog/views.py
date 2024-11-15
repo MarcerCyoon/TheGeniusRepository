@@ -7,16 +7,24 @@ from django.db.models.functions import Concat
 
 from .models import Match, Designer, ORG, Tag, YearAward
 
+def double_quote_split(value):
+    # https://stackoverflow.com/questions/6868382/python-shlex-split-ignore-single-quotes
+    lex = shlex.shlex(value, posix=True)
+    lex.quotes = '"'
+    lex.whitespace_split = True
+    lex.commenters = ''
+    return list(lex)
+
 def parse_query(query: str):
     """
     Helper function that parses a text query into
     a dictionary object 
     """
+    # replace mobile version of quotes with standard ones
+    query = query.replace("“", "\"").replace("‘", "\"") 
 
-    query = query.replace("“", "\"").replace("‘", "'") # replace mobile version of quotes with standard ones
-    criteria = shlex.split(query) # shlex.split() preserves quotes
-    # TODO: fix bug where single quotes cause server error when used as apostrophes 
-    # criteria = query.split(" ")
+    # double_quote_split preserves double-quotes
+    criteria = double_quote_split(query) 
     dct = {}
 
     # TODO: implement NOT/OR/AND
@@ -24,17 +32,22 @@ def parse_query(query: str):
     for criterion in criteria:
         if "=" in criterion:
             field, search = criterion.split("=")
+            
             if field in dct:
-                dct[field].append(search.replace('"', '').replace("'", "")) # get rid of quotes
+                # get rid of quotes
+                dct[field].append(search.replace('"', ''))
             else:
-                dct[field] = [search.replace('"', '').replace("'", "")] # get rid of quotes
+                # get rid of quotes
+                dct[field] = [search.replace('"', '')]
 
         elif ":" in criterion:
             field, search = criterion.split(":")
             if field in dct:
-                dct[field].append(search.replace('"', '').replace("'", "")) # get rid of quotes
+                # get rid of quotes
+                dct[field].append(search.replace('"', ''))
             else:
-                dct[field] = [search.replace('"', '').replace("'", "")] # get rid of quotess
+                # get rid of quotes
+                dct[field] = [search.replace('"', '')]
 
         else:
             if "name" in dct:
