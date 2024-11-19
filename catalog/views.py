@@ -154,6 +154,8 @@ def tag_generator(request):
         # for tag in tags:
         #     matches = matches.filter(Q(tags__name__iexact=tag))
 
+        matches = matches.distinct().prefetch_related('ORGs').prefetch_related('designers').prefetch_related('tags')
+
         context = {
             'generated_tags': tags,
             'generated_count': matches.count(),
