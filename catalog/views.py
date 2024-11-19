@@ -151,8 +151,8 @@ def tag_generator(request):
 
         matches = Match.objects.all()
 
-        # for tag in tags:
-        #     matches = matches.filter(Q(tags__name__iexact=tag))
+        for tag in tags:
+            matches = matches.filter(Q(tags__name__icontains=tag))
 
         matches = matches.distinct().prefetch_related('ORGs').prefetch_related('designers').prefetch_related('tags')
 
