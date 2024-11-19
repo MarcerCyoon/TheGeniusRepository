@@ -152,7 +152,7 @@ def tag_generator(request):
         matches = Match.objects.all()
 
         for tag in tags:
-            matches = matches.filter(Q(tags__name__icontains=tag))
+            matches = matches.filter(Q(tags__name__contains=tag))
 
         matches = matches.distinct().prefetch_related('ORGs').prefetch_related('designers').prefetch_related('tags')
 
@@ -212,14 +212,14 @@ class SearchView(generic.ListView):
                 elif exp.field == 'type':
                     if exp.operator == "=":
                         if exp.search.upper() == "MM":
-                            object_list = object_list.filter(Q(match_type__iexact="MM"))
+                            object_list = object_list.filter(Q(match_type__exact="MM"))
                         if exp.search.upper() == "DM":
-                            object_list = object_list.filter(Q(match_type__iexact="DM"))
+                            object_list = object_list.filter(Q(match_type__exact="DM"))
                     else:
                         if exp.search.upper() == "MM":
-                            object_list = object_list.filter(Q(match_type__iexact="DM"))
+                            object_list = object_list.filter(Q(match_type__exact="DM"))
                         if exp.search.upper() == "DM":
-                            object_list = object_list.filter(Q(match_type__iexact="MM"))
+                            object_list = object_list.filter(Q(match_type__exact="MM"))
 
                 elif exp.field == 'players':
                     if exp.operator == ">":
