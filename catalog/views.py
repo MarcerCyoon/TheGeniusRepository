@@ -149,14 +149,14 @@ def tag_generator(request):
         random.shuffle(tags)
         tags = tags[:num]
 
-        # matches = Match.objects.all()
+        matches = Match.objects.all()
 
-        # for tag in tags:
-        #     matches = matches.filter(Q(tags__name__iexact=tag))
+        for tag in tags:
+            matches = matches.filter(Q(tags__name__iexact=tag))
 
         context = {
             'generated_tags': tags,
-            # 'generated_count': matches.count(),
+            'generated_count': matches.count(),
             # 'tags_matches': matches,
             'num': num
         }
