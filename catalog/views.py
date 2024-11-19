@@ -156,8 +156,8 @@ def tag_generator(request):
 
         context = {
             'generated_tags': tags,
-            'generated_count': matches.count(),
-            # 'tags_matches': matches,
+            # 'generated_count': matches.count(),
+            'tags_matches': matches,
             'num': num
         }
     else:
