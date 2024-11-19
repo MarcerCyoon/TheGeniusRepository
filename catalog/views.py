@@ -15,7 +15,6 @@ def double_quote_split(value):
     lex.commenters = ''
     return list(lex)
 
-
 SEARCH_FIELDS = ["name", "tag", "designer", "award", "org", "type", "players"]
 
 class Expression:
@@ -134,6 +133,38 @@ def index(request):
 
 def about_us(request):
     return render(request, 'about_us.html')
+
+def tag_generator(request):
+    num = request.GET.get('num')
+
+    if request.GET.get('num'):
+        try:
+            num = int(num)
+        except ValueError:
+            return render(request, 'tag_generator.html')
+
+        import random
+        tags = list(Tag.objects.all())
+
+        random.shuffle(tags)
+
+        tags = tags[:num]
+
+        matches = Match.objects.all()
+
+        for tag in tags:
+            matches = matches.filter(Q(tags__name__iexact=tag))
+
+        context = {
+            'generated_tags': tags,
+            'generated_count': matches.count(),
+            'tags_matches': matches,
+            'num': num
+        }
+    else:
+        context = {}
+
+    return render(request, 'tag_generator.html', context=context)
 
 class SearchView(generic.ListView):
     model = Match
@@ -298,9 +329,7 @@ class MatchDetailView(generic.DetailView):
         import re, copy
         context = super(MatchDetailView, self).get_context_data(**kwargs)
 
-        # TODO: support underline and spoiler-text (https://stackoverflow.com/questions/28615544/how-can-i-create-spoiler-text)
-        # TODO: also support nicer codeblocks? pink is ugly, and give it a nice background shade
-        # TODO: add emoji support too :sob:
+        # TODO: support nicer codeblocks? pink is ugly, and give it a nice background shade
         # TODO: delete the newline that exists at the end of non-final variants like wtf
         # maybe just delete all trailing elements that are just empty
 
@@ -378,7 +407,7 @@ class MatchDetailView(generic.DetailView):
         context['titles'] = titles
 
         return context
-    
+
 class DesignerDetailView(generic.DetailView):
     model = Designer
 

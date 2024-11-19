@@ -5,6 +5,7 @@ urlpatterns = [
     path('', views.index, name='index'),
 	path('about_us/', views.about_us, name='about-us'),
     path('search/', views.SearchView.as_view(), name='search'),
+	path('tag_generator/', views.tag_generator, name='tag-generator'),
     path('matches/', views.MatchListView.as_view(), name='matches'),
     path('designers/', views.DesignerListView.as_view(), name='designers'),
 	path('awards/', views.YearAwardListView.as_view(), name='awards'),
