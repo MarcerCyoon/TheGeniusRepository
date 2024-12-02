@@ -326,10 +326,6 @@ class MatchDetailView(generic.DetailView):
         import re, copy
         context = super(MatchDetailView, self).get_context_data(**kwargs)
 
-        # TODO: support nicer codeblocks? pink is ugly, and give it a nice background shade
-        # TODO: delete the newline that exists at the end of non-final variants like wtf
-        # maybe just delete all trailing elements that are just empty
-
         # split by pre-chosen divider $%^ to get different rulesets
         rulesets = context['match'].rules.split("$%^")[1:]
         titles = rulesets[::2] # all even indices are titles
@@ -399,8 +395,24 @@ class MatchDetailView(generic.DetailView):
                     end = -1
 
             # i apologize for bad coding
-        
-        context['rulesets_line_breaks'] = rulesets_line_breaks
+
+        rulesets_line_breaks_no_trailing_newlines = []
+
+        for ruleset in rulesets_line_breaks:
+            # let's delete all trailing elements that are empty, 
+            # as they are unnecessary to render.
+            delete_blanks = None
+            for i, line in reversed(list(enumerate(ruleset))):
+                if line != "":
+                    delete_blanks = i + 1
+                    break
+            
+            if delete_blanks is not None:
+                ruleset = ruleset[:delete_blanks]
+
+            rulesets_line_breaks_no_trailing_newlines.append(ruleset)
+
+        context['rulesets_line_breaks'] = rulesets_line_breaks_no_trailing_newlines
         context['titles'] = titles
 
         return context
