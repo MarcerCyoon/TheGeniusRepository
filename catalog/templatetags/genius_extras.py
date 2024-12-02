@@ -1,8 +1,28 @@
+import copy
+
 from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe
 
 register = template.Library()
+
+def parse_code_headers(value):
+	lst = value.split("```")
+
+	if len(lst) > 2:
+		string = ""
+		for i in range(0, len(lst)):
+			string += lst[i]
+
+			if i != len(lst) - 1:
+				if i % 2 == 0:
+					string += '<code class="code-header">'
+				else:
+					string += "</code>"
+
+		return string
+	else:
+		return "```".join(lst)
 
 def parse_underlines(value):
 	lst = value.split("__")
@@ -62,7 +82,6 @@ def parse_emojis(value):
 	# this is up there as some of the worst and least Pythonic code I've written ;;
 	# cut me some slack I tried so many things and came to the conclusion I just
 	# had to manually for loop through strings :sob: I am stupid
-	import copy
 	emoji = False
 	number = False
 	start = -1
@@ -120,12 +139,13 @@ def lookup(value, key):
 @stringfilter
 def discordify(value):
 	"""
-	We are going to custom-implement underlines
-	and strikethrough and spoiler text and even
-	god damn emojis because I am insane.
+	We are going to custom-implement code blocks and
+	underlines and strikethrough and spoiler text and
+	even god damn emojis because I am insane.
 	"""
 	
-	html = parse_underlines(value)
+	html = parse_code_headers(value)
+	html = parse_underlines(html)
 	html = parse_strikethrough(html)
 	html = parse_spoilers(html)
 	html = parse_emojis(html)

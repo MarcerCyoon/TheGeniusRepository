@@ -57,7 +57,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
 ROOT_URLCONF = 'GeniusRepository.urls'
@@ -122,7 +122,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -138,7 +137,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # import-export safety settings
 IMPORT_EXPORT_ESCAPE_HTML_ON_EXPORT = True
@@ -151,6 +150,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MARKDOWNIFY = {
     "default": {
+        "LINKIFY_TEXT": {
+            "PARSE_URLS": True,
+            "PARSE_EMAIL": False,
+            "SKIP_TAGS": ['pre', 'code']
+        },
         "MARKDOWN_EXTENSIONS": [
             "fenced_code",
             "md_in_html"
@@ -181,7 +185,9 @@ MARKDOWNIFY = {
             'span' # these exist to make discordify work
         ],
         "WHITELIST_ATTRS": {
+            'a': ['href'],
             'span': ['class'],
+            'code': ['class'],
             'img': ['src', 'class', 'alt']
         }
     }
