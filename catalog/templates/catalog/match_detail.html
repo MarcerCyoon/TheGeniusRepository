@@ -2,6 +2,10 @@
 {% load markdownify %}
 {% load genius_extras %}
 
+{% block title %}
+      <title>{{ match.name }} | The Genius Repository</title>
+{% endblock %}
+
 {% block content %}
   <h1 class="mt-3 mb-1">{{ match.name }}</h1>
   <p style="margin-bottom: 0.8rem; text-align: center;">{{ match.summary }}</p>

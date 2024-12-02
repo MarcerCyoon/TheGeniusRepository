@@ -83,10 +83,6 @@ def parse_query(query: str):
 
     # TODO: implement NOT/OR/AND
 
-    # TODO: implement searching for player count by expanding the
-    # data structure to dict of dicts to allow for more information
-    # to be encoded (namely, is it = or > or <?)
-
     invalid_query = False
 
     for criterion in criteria:
