@@ -14,7 +14,7 @@
 	<meta content="https://geniusrepository.org{{ org.get_absolute_url }}" property="og:url"/>
 	<meta content="#ffcc00" data-react-helmet="true" name="theme-color"/>
 	{% with filename=org|org_name %}
-		<meta content="og:image" property="https://geniusrepository.org{% static 'images/icons/'|add:filename|add:'.png' %}"/>
+		<meta content="https://geniusrepository.org{% static 'images/icons/'|add:filename|add:'.png' %}" property="og:image"/>
 	{% endwith %}
 	
 {% endblock %}
