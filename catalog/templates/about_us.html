@@ -4,6 +4,15 @@
       <title>About Us | The Genius Repository</title>
 {% endblock %}
 
+{% block embed %}
+	<meta content="About Us" property="og:title"/>
+	<meta content="website" property="og:type"/>
+	<meta content="The Genius Repository" name="og:site_name"/>
+	<meta content="The repository are currently maintained by Marcer, ItzShaun, Zero, and RedsToad." property="og:description"/>
+	<meta content="https://geniusrepository.org{% url 'about-us' %}" property="og:url"/>
+	<meta content="#ffcc00" data-react-helmet="true" name="theme-color"/>
+{% endblock %}
+
 {% block content %}
 	<h1 class="mt-3">About Us</h1>
 

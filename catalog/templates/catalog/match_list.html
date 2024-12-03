@@ -6,6 +6,15 @@
       <title>Matches | The Genius Repository</title>
 {% endblock %}
 
+{% block embed %}
+	<meta content="Matches" property="og:title"/>
+	<meta content="website" property="og:type"/>
+	<meta content="The Genius Repository" name="og:site_name"/>
+	<meta content="A list of all Genius ORG matches on The Genius Repository." property="og:description"/>
+	<meta content="https://geniusrepository.org{% url 'matches' %}" property="og:url"/>
+	<meta content="#ffcc00" data-react-helmet="true" name="theme-color"/>
+{% endblock %}
+
 {% block content %}
 	<h1 class="mt-3">List of The Genius Matches</h1>
 	{% if match_list %}

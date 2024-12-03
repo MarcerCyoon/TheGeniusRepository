@@ -6,6 +6,15 @@
       <title>Generator | The Genius Repository</title>
 {% endblock %}
 
+{% block embed %}
+	<meta content="Generator" property="og:title"/>
+	<meta content="website" property="og:type"/>
+	<meta content="The Genius Repository" name="og:site_name"/>
+	<meta content="Generate a random set of tags and see what happens." property="og:description"/>
+	<meta content="https://geniusrepository.org{% url 'tag-generator' %}" property="og:url"/>
+	<meta content="#ffcc00" data-react-helmet="true" name="theme-color"/>
+{% endblock %}
+
 {% block content %}
 	<h1 class="mt-3">Generate a Random Set of Tags!</h1>
 
