@@ -49,7 +49,7 @@
 			<td>
 				{{ match.designers.all|join:", " }}
 			</td>
-			<td style="text-align: center;" sorttable_customkey="{{ match.ORGs.all }}">
+			<td style="text-align: center;" sorttable_customkey="{{ match.ORGs.all|join:"_" }}">
 				{% for ORG in match.ORGs.all %}
 					{% with filename=ORG|org_name %}
 						<a href="{{ ORG.get_absolute_url }}"><img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon" alt="{{ ORG }}" title="{{ ORG }}"></img></a>
