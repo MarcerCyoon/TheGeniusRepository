@@ -21,7 +21,7 @@ body {
 }
 
 .table-small {
-  min-width: 300px;
+  width: 55%;
 }
 
 .icon {
