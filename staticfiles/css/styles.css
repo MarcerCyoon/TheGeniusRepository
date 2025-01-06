@@ -14,14 +14,14 @@ body {
   max-width: 100%;
 }
 
-/* we are setting min-width to 600px to render proper table column width on mobile. */
+/* we are setting min-width to 800px to render proper table column width on mobile. */
 .table {
   vertical-align: middle;
   min-width: 800px;
 }
 
 .table-small {
-	width: 55%;
+  min-width: 300px;
 }
 
 .icon {
