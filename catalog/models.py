@@ -127,9 +127,10 @@ class YearAward(models.Model):
 class Award(models.Model):
     name = models.CharField(max_length=200, help_text="Enter the name of this award (e.g. \'Most Fun MM\').")
     description = models.CharField(max_length=1000, help_text='Enter the description of this award.')
+    priority = models.IntegerField(default=100, help_text="Priority value for awards ordering in view.")
 
     def __str__(self):
         return self.name
     
     class Meta:
-        ordering = ['name']
+        ordering = ['priority']
