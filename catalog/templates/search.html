@@ -7,10 +7,10 @@
 {% endblock %}
 
 {% block embed %}
-	<meta content="Search" property="og:title"/>
+	<meta content="{{ opengraph_title }}" property="og:title"/>
 	<meta content="website" property="og:type"/>
 	<meta content="The Genius Repository" name="og:site_name"/>
-	<meta content="Search for matches on The Genius Repository." property="og:description"/>
+	<meta content="{{ opengraph_description }}" property="og:description"/>
 	<meta content="https://geniusrepository.org{% url 'search' %}" property="og:url"/>
 	<meta content="#ffcc00" name="theme-color"/>
 {% endblock %}
