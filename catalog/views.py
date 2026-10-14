@@ -170,7 +170,7 @@ class SearchView(generic.ListView):
     template_name = "search.html"
 
     def get_queryset(self): 
-        query = self.request.GET.get("q")
+        query = self.request.GET.get('q')
 
         if query is not None:
             query_obj, _ = parse_query(query)
@@ -241,7 +241,7 @@ class SearchView(generic.ListView):
     def get_context_data(self, **kwargs):
         # necessary to add query to context to display on results
         context = super(SearchView, self).get_context_data(**kwargs)
-        query = self.request.GET.get("q")
+        query = self.request.GET.get('q')
 
         if query:
             context['query'], context['invalid_query'] = parse_query(query)
@@ -249,6 +249,13 @@ class SearchView(generic.ListView):
             if str(context['query']) == "":
                 context['query'] = "empty query"
 
+        if query is not None:
+            context["opengraph_title"] = "Search Results"
+            context["opengraph_description"] = f"Search results for {", ".join(double_quote_split(query))}."
+            print(", ".join(double_quote_split(query)))
+        else:
+            context["opengraph_title"] = "Search"
+            context["opengraph_description"] = "Search for matches on The Genius Repository."
 
         context["filtered_ruleset_list"] = []
         context["filtered_ruleset_nums"] = []
@@ -272,7 +279,7 @@ class GenericMatchListView(generic.ListView):
     model = Match
 
     def get_queryset(self):
-        queryset = super().get_queryset().prefetch_related(Prefetch('rulesets', queryset=Ruleset.objects.select_related('ORG').prefetch_related('tags'))).prefetch_related('designers')
+        queryset = super().get_queryset().order_by('id').prefetch_related(Prefetch('rulesets', queryset=Ruleset.objects.select_related('ORG').prefetch_related('tags'))).prefetch_related('designers')
         return queryset
     
     def get_context_data(self, **kwargs):
@@ -415,6 +422,12 @@ class MatchDetailView(generic.DetailView):
         import re, copy
         context = super(MatchDetailView, self).get_context_data(**kwargs)
 
+        query_ruleset = self.request.GET.get('ruleset')
+
+        # default parameters: the first tab and the match name
+        context['active_ruleset'] = -1
+        context['ruleset_name'] = context['match'].name
+
         context['ORGs'] = sorted(set(ruleset.ORG for ruleset in context['match'].rulesets.all()), key=lambda org: org.start_date)
 
         # exclude rulesets with only "-", as it is a placeholder character
@@ -422,6 +435,13 @@ class MatchDetailView(generic.DetailView):
         rulesets = context['match'].rulesets.exclude(rules="-")
 
         for ruleset in rulesets:
+            # set ruleset_name to correct alias on first page load.
+            if query_ruleset is not None and query_ruleset.isdigit() and ruleset.id == int(query_ruleset):
+                context['active_ruleset'] = int(query_ruleset)
+
+                if ruleset.alias is not None:
+                    context['ruleset_name'] = ruleset.alias
+
             # split rules by \r\n so that each can be displayed in
             # their own div and each can be markdownified properly.
             # also, this makes image processing possible as well.

@@ -4,23 +4,27 @@
 {% load static %}
 
 {% block title %}
-      <title>{{ match.name }} | The Genius Repository</title>
+      <title>{{ ruleset_name }} | The Genius Repository</title>
 {% endblock %}
 
 {% block embed %}
-	<meta content="{{ match.name }}" property="og:title"/>
+	<meta content="{{ ruleset_name }}" property="og:title"/>
 	<meta content="website" property="og:type"/>
 	<meta content="The Genius Repository" name="og:site_name"/>
 	<meta content="{{ match.designers.all|join:", " }}
 
 {{ match.summary }}" property="og:description"/>
-	<meta content="https://geniusrepository.org{{ match.get_absolute_url }}" property="og:url"/>
+  {% if active_ruleset != -1 %}
+    <meta content="https://geniusrepository.org{{ match.get_absolute_url }}?ruleset={{ active_ruleset }}" property="og:url"/>
+  {% else %}
+    <meta content="https://geniusrepository.org{{ match.get_absolute_url }}" property="og:url"/>
+  {% endif %}
 	<meta content="#ffcc00" name="theme-color"/>
   <meta content="{{ match.designers.all|join:", " }}" name="author"/>
 {% endblock %}
 
 {% block content %}
-  <h1 class="title mt-3 mb-1">{{ match.name }}</h1>
+  <h1 class="title mt-3 mb-1">{{ ruleset_name }}</h1>
   <p style="margin-bottom: 0.8rem; text-align: center;">{{ match.summary }}</p>
 
   {% if match.match_type == "MM" %}
@@ -92,9 +96,9 @@
   <div class="container mt-4 mx-auto">
     <ul class="nav nav-tabs" id="rulesTab" role="tablist">
       {% for ruleset in rulesets %}
-        {% if forloop.first %}
+        {% if active_ruleset == -1 and forloop.first or active_ruleset == ruleset.id %}
           <li class="nav-item" role="presentation">
-            <button class="nav-link active tab-color" id="rules{{forloop.counter}}-tab" data-bs-toggle="tab" type="button" role="tab" data-bs-target="#rules{{forloop.counter}}" aria-controls="rules{{forloop.counter}}" aria-selected="true">
+            <button class="nav-link active tab-color" id="rules{{ruleset.id}}-tab" data-bs-toggle="tab" type="button" role="tab" data-bs-target="#rules{{ruleset.id}}" aria-controls="rules{{ruleset.id}}" aria-selected="true">
               <div style="display: flex; align-items: center;">
                 <strong>{{ruleset.episode}}</strong> &nbsp;
                 {% with filename=ruleset.ORG|org_name %}
@@ -105,7 +109,7 @@
           </li>
         {% else %}
           <li class="nav-item" role="presentation">
-            <button class="nav-link tab-color" id="rules{{forloop.counter}}-tab" data-bs-toggle="tab" type="button" role="tab" data-bs-target="#rules{{forloop.counter}}" aria-controls="rules{{forloop.counter}}" aria-selected="false">
+            <button class="nav-link tab-color" id="rules{{ruleset.id}}-tab" data-bs-toggle="tab" type="button" role="tab" data-bs-target="#rules{{ruleset.id}}" aria-controls="rules{{ruleset.id}}" aria-selected="false">
               <div style="display: flex; align-items: center;">
                 <strong>{{ruleset.episode}}</strong> &nbsp;
                 {% with filename=ruleset.ORG|org_name %}
@@ -125,8 +129,8 @@
       {% endif %}
 
       {% for ruleset in rulesets %}
-        {% if forloop.first %}
-          <div class="tab-pane fade show active" id="rules{{forloop.counter}}" role="tabpanel" aria-labelledby="rules{{forloop.counter}}-tab">
+        {% if active_ruleset == -1 and forloop.first or active_ruleset == ruleset.id %}
+          <div class="tab-pane fade active show" id="rules{{ruleset.id}}" role="tabpanel" aria-labelledby="rules{{ruleset.id}}-tab">
               {% for rule in ruleset.rules_formatted %}
                 {% if rule == '' %}
                   <br>
@@ -150,7 +154,7 @@
                 </div>
           </div>
         {% else %}
-          <div class="tab-pane fade" id="rules{{forloop.counter}}" role="tabpanel" aria-labelledby="rules{{forloop.counter}}-tab">
+          <div class="tab-pane fade" id="rules{{ruleset.id}}" role="tabpanel" aria-labelledby="rules{{ruleset.id}}-tab">
             {% for rule in ruleset.rules_formatted %}
               {% if rule == '' %}
                 <br>
@@ -179,23 +183,20 @@
   </div>
 
 <script>
-  let aliases = new Array({{ rulesets.count }});
+  {% comment %} let aliases = new Array({{ rulesets.count }}); {% endcomment %}
+  let aliases = {};
   {% for ruleset in rulesets %}
     {% if ruleset.alias %}
-      aliases[{{ forloop.counter }} - 1] = "{{ ruleset.alias }}";
+      aliases[{{ ruleset.id }}] = "{{ ruleset.alias }}";
     {% else %}
-      aliases[{{ forloop.counter }} - 1] = "{{ match.name }}";
+      aliases[{{ ruleset.id }}] = "{{ match.name }}";
     {% endif %}
   {% endfor %}
 
-  if (window.location.hash) {
-    let hash = window.location.hash.slice(1);
-    const selectedTab = document.querySelector(`button[id="rules${hash}-tab"]`);
-
-    if (selectedTab) {
-      const bootstrapTab = new bootstrap.Tab(selectedTab);
-      bootstrapTab.show();
-    }
+  const changeAlias = (id) => {
+    const alias = aliases[parseInt(id)];
+    const title = document.querySelector(`h1`);
+    title.innerHTML = alias; // TODO: have this fade in and out maybe?
   }
 
   const tabs = document.querySelectorAll('button[data-bs-toggle="tab"]')
@@ -203,10 +204,8 @@
   tabs.forEach(tab => {
     tab.addEventListener('shown.bs.tab', event => {
       const value = event.target.id;
-      const alias = aliases[parseInt(value[value.length - 5]) - 1];
-      const title = document.querySelector(`h1`);
-      title.innerHTML = alias; // TODO: have this fade in and out maybe?
-      // window.location.hash = value[value.length - 5];
+      const id = value.replace(/\D/g, "");
+      changeAlias(id);
     })
   });
 </script>
