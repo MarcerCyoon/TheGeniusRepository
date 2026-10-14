@@ -2,6 +2,7 @@
 *.sqlite3
 .env
 .DS_Store
+TODO.md
 
 # Ignore Django Debug Toolbar
 staticfiles/debug_toolbar/
