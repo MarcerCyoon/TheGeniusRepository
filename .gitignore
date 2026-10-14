@@ -3,6 +3,9 @@
 .env
 .DS_Store
 
+# Ignore Django Debug Toolbar
+staticfiles/debug_toolbar/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
