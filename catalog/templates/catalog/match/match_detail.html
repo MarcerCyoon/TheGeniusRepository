@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+{% load markdownify %}
+{% load genius_extras %}
+{% load static %}
+
+{% block title %}
+      <title>{{ match.name }} | The Genius Repository</title>
+{% endblock %}
+
+{% block embed %}
+	<meta content="{{ match.name }}" property="og:title"/>
+	<meta content="website" property="og:type"/>
+	<meta content="The Genius Repository" name="og:site_name"/>
+	<meta content="{{ match.designers.all|join:", " }}
+
+{{ match.summary }}" property="og:description"/>
+	<meta content="https://geniusrepository.org{{ match.get_absolute_url }}" property="og:url"/>
+	<meta content="#ffcc00" name="theme-color"/>
+  <meta content="{{ match.designers.all|join:", " }}" name="author"/>
+{% endblock %}
+
+{% block content %}
+  <h1 class="title mt-3 mb-1">{{ match.name }}</h1>
+  <p style="margin-bottom: 0.8rem; text-align: center;">{{ match.summary }}</p>
+
+  {% if match.match_type == "MM" %}
+    <table class="table table-borderless table-primary table-sm table-striped table-small mx-auto" style="text-align: center; vertical-align: center; border: 3px solid #7FB4FF; border-radius: 80px; padding: 0px 10px; overflow: hidden; border-collapse: separate; border-spacing: 0;">
+  {% else %}
+    <table class="table table-borderless table-danger table-sm table-striped table-small mx-auto" style="text-align: center; vertical-align: center; border: 3px solid #FF6254; border-radius: 80px; padding: 0px 10px; overflow: hidden; border-collapse: separate; border-spacing: 0;">
+  {% endif %}
+      <tr style="height: 50px;">
+        <td>
+          <strong>Designer(s):</strong>
+          {% for designer in match.designers.all %}
+            {% if forloop.last %}
+              <a href="{{ designer.get_absolute_url }}">{{ designer.name }}</a>
+            {% else %}
+              <a href="{{ designer.get_absolute_url }}">{{ designer.name }}</a>, 
+            {% endif %}
+          {% endfor %}
+        </td>
+        <td>
+          {% if match.max_players %}
+            <strong>Match Type:</strong> {{ match.match_type }} (for {{ match.min_players }}~{{ match.max_players }} players)
+          {% else %}
+            <strong>Match Type:</strong> {{ match.match_type }} (for {{ match.min_players }} players)
+          {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <strong>Featured in:</strong>
+            {% for org in ORGs %}
+              {% if forloop.last %}
+                <a href="{{ org.get_absolute_url }}">{{ org.name }}</a>
+              {% else %}
+                <a href="{{ org.get_absolute_url }}">{{ org.name }}</a>, 
+              {% endif %}
+            {% endfor %}
+        </td>
+      </tr>
+      {% if match.awards.all %}
+        <tr>
+          <td colspan="2">
+            <strong>Awards:</strong>
+              {% for award in match.awards.all %}
+                {% if forloop.last %}
+                  <span>{{ award }}</span>
+                {% else %}
+                  <span>{{ award }}</span>, 
+                {% endif %}
+              {% endfor %}
+          </td>
+        </tr>
+      {% endif %}
+      {% if match.see_also.all %}
+        <tr>
+          <td colspan="2">
+            <strong>See Also:</strong>
+              {% for match in match.see_also.all %}
+                {% if forloop.last %}
+                  <a href="{{ match.get_absolute_url }}">{{ match.name }}</a>
+                {% else %}
+                  <a href="{{ match.get_absolute_url }}">{{ match.name }}</a>, 
+                {% endif %}
+              {% endfor %}
+          </td>
+        </tr>
+      {% endif %}
+    </table>
+
+  <div class="container mt-4 mx-auto">
+    <ul class="nav nav-tabs" id="rulesTab" role="tablist">
+      {% for ruleset in rulesets %}
+        {% if forloop.first %}
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active tab-color" id="rules{{forloop.counter}}-tab" data-bs-toggle="tab" type="button" role="tab" data-bs-target="#rules{{forloop.counter}}" aria-controls="rules{{forloop.counter}}" aria-selected="true">
+              <div style="display: flex; align-items: center;">
+                <strong>{{ruleset.episode}}</strong> &nbsp;
+                {% with filename=ruleset.ORG|org_name %}
+                  <img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon" alt="{{ ORG }}" title="{{ ORG }}"></img>
+                {% endwith %}
+              </div>
+            </a>
+          </li>
+        {% else %}
+          <li class="nav-item" role="presentation">
+            <button class="nav-link tab-color" id="rules{{forloop.counter}}-tab" data-bs-toggle="tab" type="button" role="tab" data-bs-target="#rules{{forloop.counter}}" aria-controls="rules{{forloop.counter}}" aria-selected="false">
+              <div style="display: flex; align-items: center;">
+                <strong>{{ruleset.episode}}</strong> &nbsp;
+                {% with filename=ruleset.ORG|org_name %}
+                  <img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon" alt="{{ ORG }}" title="{{ ORG }}"></img>
+                {% endwith %}
+              </div>
+            </a>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+
+    <div class="tab-content" id="rulesTabContent">
+      <br>
+      {% if rulesets.count == 0 %}
+        <p style="text-align: center;">There are no rulesets for this game.</p>
+      {% endif %}
+
+      {% for ruleset in rulesets %}
+        {% if forloop.first %}
+          <div class="tab-pane fade show active" id="rules{{forloop.counter}}" role="tabpanel" aria-labelledby="rules{{forloop.counter}}-tab">
+              {% for rule in ruleset.rules_formatted %}
+                {% if rule == '' %}
+                  <br>
+                {% elif '.discordapp.' in rule or '.imgur.' in rule %}
+                  <div class="text-center"><img src={{ rule }}></div>
+                {% else %}
+                  <div class="pr-2">{{ rule|discordify|markdownify }}</div>
+                {% endif %}
+              {% endfor %}
+                <hr>
+                <div style="margin-left:20px;margin-top:20px">
+                  <h4>Tags</h4>
+                  {% for tag in ruleset.tags.all %}
+                    <hr>
+                    <p>
+                      <span class="tag">{{ tag.name }}</span>
+                      <span class="tag_hide">&nbsp;&nbsp;&nbsp;({{tag.description}})</span>
+                    </p>
+                  {% endfor %}
+                  <br>
+                </div>
+          </div>
+        {% else %}
+          <div class="tab-pane fade" id="rules{{forloop.counter}}" role="tabpanel" aria-labelledby="rules{{forloop.counter}}-tab">
+            {% for rule in ruleset.rules_formatted %}
+              {% if rule == '' %}
+                <br>
+              {% elif '.discordapp.' in rule or '.imgur.' in rule %}
+                <div class="text-center"><img src={{ rule }}></div>
+              {% else %}
+                <div class="pr-2">{{ rule|discordify|markdownify }}</div>
+              {% endif %}
+            {% endfor %}
+                <hr>
+                <div style="margin-left:20px;margin-top:20px">
+                  <h4>Tags</h4>
+                  {% for tag in ruleset.tags.all %}
+                    <hr>
+                    <p>
+                      <span class="tag">{{ tag.name }}</span>
+                      <span class="tag_hide">&nbsp;&nbsp;&nbsp;({{tag.description}})</span>
+                    </p>
+                  {% endfor %}
+                  <br>
+                </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+<script>
+  let aliases = new Array({{ rulesets.count }});
+  {% for ruleset in rulesets %}
+    {% if ruleset.alias %}
+      aliases[{{ forloop.counter }} - 1] = "{{ ruleset.alias }}";
+    {% else %}
+      aliases[{{ forloop.counter }} - 1] = "{{ match.name }}";
+    {% endif %}
+  {% endfor %}
+
+  if (window.location.hash) {
+    let hash = window.location.hash.slice(1);
+    const selectedTab = document.querySelector(`button[id="rules${hash}-tab"]`);
+
+    if (selectedTab) {
+      const bootstrapTab = new bootstrap.Tab(selectedTab);
+      bootstrapTab.show();
+    }
+  }
+
+  const tabs = document.querySelectorAll('button[data-bs-toggle="tab"]')
+
+  tabs.forEach(tab => {
+    tab.addEventListener('shown.bs.tab', event => {
+      const value = event.target.id;
+      const alias = aliases[parseInt(value[value.length - 5]) - 1];
+      const title = document.querySelector(`h1`);
+      title.innerHTML = alias; // TODO: have this fade in and out maybe?
+      // window.location.hash = value[value.length - 5];
+    })
+  });
+</script>
+{% endblock %}

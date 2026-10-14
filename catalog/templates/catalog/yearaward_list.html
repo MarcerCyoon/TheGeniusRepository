@@ -22,6 +22,7 @@
 				<th width="8%" style="text-align: center;">Year</th>
 				<th>Award</th>
 				<th>Winner</th>
+				<th>Runner-up</th>
 			</tr>
 		</thead>
 			{% for key, value in sorted_award_dct.items %}
@@ -39,15 +40,16 @@
 								<strong style="color:#990000;">{{ award.award.name }}</strong>
 							{% endif %}	
 						</td>
-						<td>
 							{% for match in award.match_set.all %}
-								{% if forloop.last%}
+							<td>
+								{% if forloop.last %}
 									<a href="{{ match.get_absolute_url }}">{{ match }}</a> by {{ match.designers.all|join:"/"}}
 								{% else %}
-									<a href="{{ match.get_absolute_url }}">{{ match }}</a> by {{ match.designers.all|join:"/"}}, 
+									<a href="{{ match.get_absolute_url }}">{{ match }}</a> by {{ match.designers.all|join:"/"}}
 								{% endif %}
+							</td>
 							{% endfor %}
-						</td>
+						<td></td>
 					</tr>
 				{% endfor %}
 			{% endfor %}

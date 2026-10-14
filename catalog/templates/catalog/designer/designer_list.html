@@ -28,7 +28,7 @@
 			</thead>
 		{% for designer in sorted_designer_list %}
 			{% if designer.match_set.all.count %}
-				<tr>
+				<tr class="table-row">
 					<td>
 						<a href="{{ designer.get_absolute_url }}">{{ designer.name }}</a>
 					</td>
@@ -36,11 +36,13 @@
 						{{ designer.match_set.all.count }}
 					</td>
 					<td>
-						{% for org in designer_orgs|lookup:designer.name %}
-							{% with filename=org.0|org_name %}
-								<a href="{{ org.2 }}"><img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon" alt="{{ org.0 }}" title="{{ org.0 }}"></img></a>
-							{% endwith %}
-						{% endfor %}
+						<div class="icon-box" style="justify-content: start;">
+							{% for org in designer_orgs|lookup:designer.name %}
+								{% with filename=org.0|org_name %}
+									<a href="{{ org.2 }}"><img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon" alt="{{ org.0 }}" title="{{ org.0 }}"></img></a>
+								{% endwith %}
+							{% endfor %}
+						</div>
 					</td>
 				</tr>
 			{% endif %}

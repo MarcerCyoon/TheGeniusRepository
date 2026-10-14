@@ -2,6 +2,20 @@ body {
 	background-color: rgb(214, 212, 212) !important;
 }
 
+/* color: #c28938;
+text-shadow: 0px -1px 0px rgba(255,255,255,0.3), 0px 1px 0px rgba(0,0,0,0.7); */
+
+.title {
+  color: #D88C00;
+  text-shadow: 0px -1px 0px #F2AB30, 0px 1px 0px #A56B00;
+  /* background-color: #272113;
+  width: fit-content;
+  margin: auto;
+  padding-left: 25px;
+  padding-right: 25px;
+  border: thick solid #feeda8; */
+}
+
 .sidebar-nav {
 	margin-top: 20px;
 	padding: 0;
@@ -14,14 +28,22 @@ body {
   max-width: 100%;
 }
 
+.table-div {
+  border-radius: 100px;
+}
+
 /* we are setting min-width to 800px to render proper table column width on mobile. */
 .table {
   vertical-align: middle;
-  min-width: 800px;
+  min-width: 500px;
 }
 
 .table-small {
   width: 55%;
+}
+
+.table-row {
+  height: 45px;
 }
 
 .icon {
@@ -71,11 +93,13 @@ body {
   transform: translate(0%, -5%);
 }
 
-/* make blockquotes look similar to Discord */
-blockquote {
-  border-left: 5px solid #8b8b8b;
-  padding: 0.2em 7px;
-  margin: 0 0 0rem;
+.icon-box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  gap: 4px;
 }
 
 /* make codeblocks look similar to Discord */
@@ -85,6 +109,13 @@ blockquote {
   margin-bottom: 1em;
   padding: .5em;
   
+}
+
+/* make blockquotes look similar to Discord */
+blockquote {
+  border-left: 5px solid #8b8b8b;
+  padding: 0.2em 7px;
+  margin: 0 0 0rem;
 }
 
 code {

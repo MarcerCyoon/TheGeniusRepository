@@ -39,8 +39,8 @@
 			</tr>
 		</thead>
 	{% for org in org_list %}
-		{% if org.match_set.all.count %}
-		<tr>
+		{% if org.ruleset_set.all.count %}
+		<tr class="table-row">
 			<td style="text-align: center;">
 				{% with filename=org|org_name %}
 					<img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon-lg"></img>

@@ -17,7 +17,7 @@
 
 {% block content %}
   <h1 class="mt-3">{{ designer.name }}</h1>
-  <p>{{ designer.desc }}</p>
+  <p style="text-align: center;">{{ designer.desc }}</p>
 
   <br>
   
@@ -35,7 +35,7 @@
 			</tr>
 		</thead>
 		{% for match in match_list %}
-		<tr>
+		<tr class="table-row">
 			<td style="text-align: center;">
 				{% if match.match_type == "MM" %}
 					<strong style="color:#003399;">{{ match.match_type }}</strong>
@@ -50,7 +50,7 @@
 				{{ match.designers.all|join:", " }}
 			</td>
 			<td style="text-align: center;" sorttable_customkey="{{ match.ORGs.all|join:"_" }}">
-				{% for ORG in match.ORGs.all %}
+				{% for ORG in match.ORGs %}
 					{% with filename=ORG|org_name %}
 						<a href="{{ ORG.get_absolute_url }}"><img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon" alt="{{ ORG }}" title="{{ ORG }}"></img></a>
 					{% endwith %}
