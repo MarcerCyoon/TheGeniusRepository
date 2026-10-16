@@ -2,7 +2,6 @@ from django.db import models
 from django.db.models import Index
 from django.urls import reverse
 
-
 # Create your models here.
 class Ruleset(models.Model):
     alias = models.CharField(max_length=200, blank=True, null=True, help_text="Write the alias for this game for this specific Ruleset, if it had one.")
