@@ -14,7 +14,6 @@ urlpatterns = [
 	path('tags/', views.TagListView.as_view(), name="tags"),
 	path('match/random', views.random_redirect, name='random'),
     path('match/<int:pk>', views.MatchDetailView.as_view(), name='match-detail'),
-	path('match/<int:pk>/<int:ruleset__pk>', views.MatchDetailView.as_view(), name='match-detail-page'),
     path('designer/<int:pk>', views.DesignerDetailView.as_view(), name='designer-detail'),
     path('org/<int:pk>', views.ORGDetailView.as_view(), name="org-detail"),
 ]
