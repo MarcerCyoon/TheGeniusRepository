@@ -63,16 +63,14 @@
 						{% endif %}
 					</td>
 					<td>
-						<a href="{{ ruleset.match.get_absolute_url }}">
-							{% if ruleset.alias %}
-								{{ ruleset.alias }}
-								<div style="font-size: 8px;">
-									({{ ruleset.match.name }})
-								</div>
-							{% else %}
-								{{ ruleset.match.name }}
-							{% endif %}
-						</a>
+						{% if ruleset.alias %}
+							<a href="{{ ruleset.match.get_absolute_url }}?ruleset={{ ruleset.id }}">{{ ruleset.alias }}</a>
+							<div style="font-size: 8px;">
+								({{ ruleset.match.name }})
+							</div>
+						{% else %}
+							<a href="{{ ruleset.match.get_absolute_url }}?ruleset={{ ruleset.id }}">{{ ruleset.match.name }}</a>
+						{% endif %}
 					</td>
 					<td>
 						{{ ruleset.match.designers.all|join:', ' }}
