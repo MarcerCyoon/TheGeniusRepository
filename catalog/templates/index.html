@@ -16,5 +16,9 @@
 
 	<hr>
 	
-	<h4>Currently, the repository contains {{ num_matches }} matches in its archive.</h4>
+	<h4 style="text-align: center;"> Currently, the repository contains {{ num_matches }} matches in its archive.</h4>
+
+	<div class="d-flex me-auto justify-content-center align-items-center mt-3">
+		<button type="button" class="btn btn-lg p-3 btn-primary" onclick="window.location.assign('{% url 'random' %}')">Go to a Random Match!</button>
+	</div>
 {% endblock %}

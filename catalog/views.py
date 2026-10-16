@@ -1,8 +1,9 @@
+import random
 import shlex
 from typing import Any
 
 from django.db.models.query import QuerySet
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views import generic
 from django.db.models import F, Q, Value, Count, CharField, Prefetch
 from django.db.models.functions import Concat
@@ -151,7 +152,8 @@ def annotate_match(match):
 
 # Create your views here.
 def index(request):
-    num_matches = Match.objects.all().count()
+    matches = Match.objects.all().only('pk')
+    num_matches = matches.count()
     
     context = {
         'num_matches': num_matches
@@ -159,6 +161,12 @@ def index(request):
 
     return render(request, 'index.html', context=context)
 
+def random_redirect(request):
+    matches = list(Match.objects.all().only('pk'))
+    random.shuffle(matches)
+
+    return redirect('match-detail', pk=matches[0].pk, permanent=True)
+    
 def about_us(request):
     return render(request, 'about_us.html')
 
@@ -170,8 +178,6 @@ def tag_generator(request):
             num = int(num)
         except ValueError:
             return render(request, 'tag_generator.html')
-
-        import random
 
         tags = list(Tag.objects.all())
         random.shuffle(tags)
