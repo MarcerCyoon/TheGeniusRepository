@@ -45,7 +45,7 @@ text-shadow: 0px -1px 0px rgba(255,255,255,0.3), 0px 1px 0px rgba(0,0,0,0.7); */
 .mm-facts {
   text-align: center;
   vertical-align: middle;
-  border: 3px solid #7FB4FF;
+  border: 2px solid #7FB4FF;
   border-radius: 30px;
   overflow: hidden;
   border-collapse: separate;
@@ -55,7 +55,7 @@ text-shadow: 0px -1px 0px rgba(255,255,255,0.3), 0px 1px 0px rgba(0,0,0,0.7); */
 .dm-facts {
   text-align: center;
   vertical-align: middle;
-  border: 3px solid #FF6254;
+  border: 2px solid #FF6254;
   border-radius: 30px;
   overflow: hidden;
   border-collapse: separate;
