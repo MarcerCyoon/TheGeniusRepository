@@ -7,6 +7,13 @@ from .models import Match, Designer, ORG, Tag, Award, YearAward
 
 # Register your models here.
 
+class MatchBasicResource(resources.ModelResource):
+    # Resource made so that every PK import is
+    # represented as a PK, and not human-readable names.
+
+    class Meta:
+        model = Match
+
 class MatchResource(resources.ModelResource):
     # Custom resource for import so that
     # you don't need to know the pk of
@@ -68,7 +75,7 @@ class ORGResource(resources.ModelResource):
 
 @admin.register(Match)
 class MatchAdmin(ImportExportModelAdmin):
-    resource_classes = [MatchResource]
+    resource_classes = [MatchResource, MatchBasicResource]
     list_display = ('match_type', 'name', 'display_designers', 'display_ORGs', 'display_tags')
     list_display_links = ['name']
     list_filter = ('match_type', 'designers', 'ORGs')
