@@ -66,7 +66,7 @@ class Match(models.Model):
     
     def get_absolute_url(self):
         """Returns the URL to access a detail record for this match."""
-        return reverse('match-detail', args=[str(self.id)])
+        return reverse('match-detail', args=[str(self.pk)])
     
     def display_designers(self):
         """
@@ -94,7 +94,7 @@ class Designer(models.Model):
         return self.name
     
     def get_absolute_url(self):
-        return reverse("designer-detail", args=[str(self.id)])
+        return reverse("designer-detail", args=[str(self.pk)])
     
     class Meta:
         ordering = ['name']
@@ -117,7 +117,7 @@ class ORG(models.Model):
         return self.name
     
     def get_absolute_url(self):
-        return reverse("org-detail", args=[str(self.id)])
+        return reverse("org-detail", args=[str(self.pk)])
 
 class Tag(models.Model):
     name = models.CharField(max_length=200, help_text='Enter a tag (e.g. \'social deduction\' or \'bidding\')')

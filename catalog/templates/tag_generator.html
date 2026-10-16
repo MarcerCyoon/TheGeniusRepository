@@ -64,12 +64,12 @@
 					</td>
 					<td>
 						{% if ruleset.alias %}
-							<a href="{{ ruleset.match.get_absolute_url }}?ruleset={{ ruleset.id }}">{{ ruleset.alias }}</a>
+							<a href="{{ ruleset.match.get_absolute_url }}?ruleset={{ ruleset.pk }}">{{ ruleset.alias }}</a>
 							<div style="font-size: 8px;">
 								({{ ruleset.match.name }})
 							</div>
 						{% else %}
-							<a href="{{ ruleset.match.get_absolute_url }}?ruleset={{ ruleset.id }}">{{ ruleset.match.name }}</a>
+							<a href="{{ ruleset.match.get_absolute_url }}?ruleset={{ ruleset.pk }}">{{ ruleset.match.name }}</a>
 						{% endif %}
 					</td>
 					<td>

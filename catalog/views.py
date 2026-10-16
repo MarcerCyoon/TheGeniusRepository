@@ -294,13 +294,13 @@ class SearchView(generic.ListView):
 
         context["filtered_ruleset_list"] = []
         context["filtered_ruleset_nums"] = []
-        filtered_ids = []
+        filtered_pks = []
 
         for object in context["object_list"]:
-            if object.match.id not in filtered_ids:
+            if object.match.pk not in filtered_pks:
                 context["filtered_ruleset_list"].append(object)
-                context["filtered_ruleset_nums"] = Ruleset.objects.filter(match__id=object.match.id)
-                filtered_ids.append(object.match.id)
+                context["filtered_ruleset_nums"] = Ruleset.objects.filter(match__pk=object.match.pk)
+                filtered_pks.append(object.match.pk)
 
         return context
 
@@ -453,7 +453,7 @@ class MatchDetailView(generic.DetailView):
 
         for ruleset in rulesets:
             # set ruleset_name to correct alias on first page load.
-            if query_ruleset is not None and query_ruleset.isdigit() and ruleset.id == int(query_ruleset):
+            if query_ruleset is not None and query_ruleset.isdigit() and ruleset.pk == int(query_ruleset):
                 context['active_ruleset'] = int(query_ruleset)
 
                 if ruleset.alias is not None:
