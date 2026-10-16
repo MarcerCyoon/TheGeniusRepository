@@ -307,7 +307,7 @@ class GenericMatchListView(generic.ListView):
     model = Match
 
     def get_queryset(self):
-        queryset = super().get_queryset().order_by('id').prefetch_related(Prefetch('rulesets', queryset=Ruleset.objects.select_related('ORG').prefetch_related('tags'))).prefetch_related('designers')
+        queryset = super().get_queryset().prefetch_related(Prefetch('rulesets', queryset=Ruleset.objects.select_related('ORG').prefetch_related('tags'))).prefetch_related('designers')
         return queryset
     
     def get_context_data(self, **kwargs):
