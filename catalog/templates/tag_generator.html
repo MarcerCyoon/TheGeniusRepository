@@ -66,6 +66,9 @@
 						<a href="{{ ruleset.match.get_absolute_url }}">
 							{% if ruleset.alias %}
 								{{ ruleset.alias }}
+								<div style="font-size: 8px;">
+									({{ ruleset.match.name }})
+								</div>
 							{% else %}
 								{{ ruleset.match.name }}
 							{% endif %}
@@ -81,8 +84,8 @@
 							{% endwith %}
 						{% endfor %}
 					</td>
-					<td>
-						{{ ruleset.min_players }}
+					<td style="text-align: center;">
+						{{ ruleset.player_count }}
 					</td>
 					<td style="font-size: 10px;">
 						{{ruleset.tags.all|join:', '}}

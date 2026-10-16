@@ -50,14 +50,16 @@
 				{{ match.designers.all|join:", " }}
 			</td>
 			<td style="text-align: center;" sorttable_customkey="{{ match.ORGs.all|join:"_" }}">
-				{% for ORG in match.ORGs %}
-					{% with filename=ORG|org_name %}
-						<a href="{{ ORG.get_absolute_url }}"><img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon" alt="{{ ORG }}" title="{{ ORG }}"></img></a>
-					{% endwith %}
-				{% endfor %}
+				<div class="icon-box">
+					{% for ORG in match.ORGs %}
+						{% with filename=ORG|org_name %}
+							<a href="{{ ORG.get_absolute_url }}"><img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon" alt="{{ ORG }}" title="{{ ORG }}"></img></a>
+						{% endwith %}
+					{% endfor %}
+				</div>
 			</td>
 			<td style="text-align: center;">
-				{{ match.min_players }}
+				{{ match.player_counts }}
 			</td>
 			<td style="font-size: 10px;">
 				{% comment %} <image src="https://i.imgur.com/6JcNCRN.png" title="Strategy" alt="Strategy" width="10%" height="10%"></image> {% endcomment %}

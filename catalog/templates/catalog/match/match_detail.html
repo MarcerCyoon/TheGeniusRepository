@@ -44,17 +44,13 @@
           {% endfor %}
         </td>
         <td>
-          {% if match.max_players %}
-            <strong>Match Type:</strong> {{ match.match_type }} (for {{ match.min_players }}~{{ match.max_players }} players)
-          {% else %}
-            <strong>Match Type:</strong> {{ match.match_type }} (for {{ match.min_players }} players)
-          {% endif %}
+            <strong>Match Type:</strong> {{ match.match_type }} (for {{ match.player_counts }} players)
         </td>
       </tr>
       <tr>
         <td colspan="2">
           <strong>Featured in:</strong>
-            {% for org in ORGs %}
+            {% for org in match.ORGs %}
               {% if forloop.last %}
                 <a href="{{ org.get_absolute_url }}">{{ org.name }}</a>
               {% else %}
@@ -102,7 +98,7 @@
               <div style="display: flex; align-items: center;">
                 <strong>{{ruleset.episode}}</strong> &nbsp;
                 {% with filename=ruleset.ORG|org_name %}
-                  <img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon" alt="{{ ORG }}" title="{{ ORG }}"></img>
+                  <img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon" alt="{{ ruleset.ORG }}" title="{{ ruleset.ORG }}"></img>
                 {% endwith %}
               </div>
             </a>
@@ -113,7 +109,7 @@
               <div style="display: flex; align-items: center;">
                 <strong>{{ruleset.episode}}</strong> &nbsp;
                 {% with filename=ruleset.ORG|org_name %}
-                  <img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon" alt="{{ ORG }}" title="{{ ORG }}"></img>
+                  <img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon" alt="{{ ruleset.ORG }}" title="{{ ruleset.ORG }}"></img>
                 {% endwith %}
               </div>
             </a>

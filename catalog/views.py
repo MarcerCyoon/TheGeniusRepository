@@ -119,6 +119,29 @@ def parse_query(query: str):
 
     return query_obj, invalid_query
 
+def annotate_match(match):
+    """
+    Given a list of Rulesets for a Match,
+    return ORGs, Player Counts, Tags, and Aliases
+    to annotate the Match itself with. 
+    """
+    rulesets = match.rulesets.all()
+    match.ORGs = sorted(set(ruleset.ORG for ruleset in rulesets), key=lambda org: org.start_date)
+    match.player_counts = "/".join([str(count) for count in sorted(set(ruleset.player_count for ruleset in rulesets))])
+
+    tags = set()
+    match.aliases = set()
+    for ruleset in rulesets:
+        for tag in ruleset.tags.all():
+            tags.add(tag)
+
+        if ruleset.alias:
+            match.aliases.add(ruleset.alias)
+
+    match.tags = sorted(tags, key=lambda tag: tag.name)
+
+    return match
+
 # Create your views here.
 def index(request):
     num_matches = Match.objects.all().count()
@@ -221,19 +244,19 @@ class SearchView(generic.ListView):
 
                 elif exp.field == 'players':
                     if exp.operator == ">":
-                        object_list = object_list.filter(Q(min_players__gt=exp.search))
+                        object_list = object_list.filter(Q(player_count__gt=exp.search))
                     elif exp.operator == "<":
-                        object_list = object_list.filter(Q(min_players__lt=exp.search))
+                        object_list = object_list.filter(Q(player_count__lt=exp.search))
                     elif exp.operator == ">=":
-                        object_list = object_list.filter(Q(min_players__gte=exp.search))
+                        object_list = object_list.filter(Q(player_count__gte=exp.search))
                     elif exp.operator == "<=":
-                        object_list = object_list.filter(Q(min_players__lte=exp.search))
+                        object_list = object_list.filter(Q(player_count__lte=exp.search))
                     elif exp.operator == "!=":
-                        object_list = object_list.filter(~Q(min_players__exact=exp.search))
+                        object_list = object_list.filter(~Q(player_count__exact=exp.search))
                     else:
-                        object_list = object_list.filter(Q(min_players__exact=exp.search))
+                        object_list = object_list.filter(Q(player_count__exact=exp.search))
 
-            object_list = object_list.distinct().select_related('ORG').select_related('match').prefetch_related('tags')
+            object_list = object_list.distinct().select_related('ORG').select_related('match').prefetch_related('tags').order_by('ordering', 'id')
             return object_list
         else:
             return Ruleset.objects.none()
@@ -264,8 +287,7 @@ class SearchView(generic.ListView):
         for object in context["object_list"]:
             if object.match.id not in filtered_ids:
                 context["filtered_ruleset_list"].append(object)
-                # TODO: do something here so that we can get the correct hash numbers for search results lol
-                context["filtered_ruleset_nums"] = Ruleset.objects.filter(match__id=object.match.id).order_by("id")
+                context["filtered_ruleset_nums"] = Ruleset.objects.filter(match__id=object.match.id)
                 filtered_ids.append(object.match.id)
 
         return context
@@ -286,24 +308,7 @@ class GenericMatchListView(generic.ListView):
         context = super(GenericMatchListView, self).get_context_data(**kwargs)
         
         for match in context['match_list']:
-            match.ORGs = sorted(set(ruleset.ORG for ruleset in match.rulesets.all()), key=lambda org: org.start_date)
-            p = set(ruleset.min_players for ruleset in match.rulesets.all())
-            if len(p):
-                match.min_players = min(ruleset.min_players for ruleset in match.rulesets.all())
-            else:
-                match.min_players = 1
-
-            tags = set()
-            aliases = set()
-            for ruleset in match.rulesets.all():
-                for tag in ruleset.tags.all():
-                    tags.add(tag)
-
-                if ruleset.alias:
-                    aliases.add(ruleset.alias)
-
-            match.aliases = aliases
-            match.tags = sorted(tags, key=lambda tag: tag.name)
+            match = annotate_match(match)
             
         return context
 
@@ -413,7 +418,7 @@ class MatchDetailView(generic.DetailView):
 
     def get_queryset(self):
         return Match.objects.prefetch_related(
-            Prefetch('rulesets', queryset=Ruleset.objects.select_related('ORG').prefetch_related('tags')),
+            Prefetch('rulesets', queryset=Ruleset.objects.select_related('ORG').prefetch_related('tags').order_by('ordering', 'id')),
             Prefetch('designers', queryset=Designer.objects.only('name')),
             Prefetch('awards', queryset=YearAward.objects.all())
         )
@@ -428,7 +433,7 @@ class MatchDetailView(generic.DetailView):
         context['active_ruleset'] = -1
         context['ruleset_name'] = context['match'].name
 
-        context['ORGs'] = sorted(set(ruleset.ORG for ruleset in context['match'].rulesets.all()), key=lambda org: org.start_date)
+        context['match'] = annotate_match(context['match'])
 
         # exclude rulesets with only "-", as it is a placeholder character
         # to denote a ruleset that isn't on the repository yet
@@ -544,20 +549,8 @@ class DesignerDetailView(generic.DetailView):
         )
         
         for match in context['match_list']:
-            match.ORGs = sorted(set(ruleset.ORG for ruleset in match.rulesets.all()), key=lambda org: org.start_date)
-            p = set(ruleset.min_players for ruleset in match.rulesets.all())
-            if len(p):
-                match.min_players = min(ruleset.min_players for ruleset in match.rulesets.all())
-            else:
-                match.min_players = 1
+            match = annotate_match(match)
 
-            tags = set()
-            for ruleset in match.rulesets.all():
-                for tag in ruleset.tags.all():
-                    tags.add(tag)
-                    
-            match.tags = sorted(tags, key=lambda tag: tag.name)
-        
         context['match_exists'] = len(context['match_list']) > 0
 
         return context

@@ -10,9 +10,8 @@ class Ruleset(models.Model):
     episode = models.CharField(max_length=100, help_text="Details about the episode in which this Ruleset was played (such as 'MM7', 'Episode 6', 'DM6')")
     rules = models.TextField(max_length=50000, help_text='Enter the rules for the Ruleset here.')
     tags = models.ManyToManyField('Tag', help_text='Choose tags for this Ruleset.', blank=True)
-    # player_counts = models.CharField(max_length=100, help_text="Enter the player counts this Ruleset supports, separated by commas.")
-    min_players = models.IntegerField(help_text="Minimum number of players needed to play this match with this Ruleset.")
-    max_players = models.IntegerField(help_text="Maximum number of players that can play this match with this Ruleset. Leave empty if num_players is not a range.", null=True, blank=True)
+    player_count = models.PositiveIntegerField(help_text="Number of players needed to play this match with this Ruleset.")
+    ordering = models.IntegerField(help_text="Helper integer used to give rulesets of the same match a proper order. If there is a tie in order, the ruleset that was created first takes default precedence.", default=0)
 
     match = models.ForeignKey('Match', on_delete=models.SET_NULL, null=True, related_name="rulesets")
 
@@ -34,8 +33,6 @@ class Ruleset(models.Model):
         return ', '.join(tag.name for tag in self.tags.all())
     
     display_tags.short_description = 'Tags'
-
-# TODO: make a through model for MatchRuleset to preserve order?
 
 class Match(models.Model):
     name = models.CharField(max_length=200)
@@ -153,7 +150,7 @@ class YearAward(models.Model):
 class Award(models.Model):
     name = models.CharField(max_length=200, help_text="Enter the name of this award (e.g. \'Most Fun MM\').")
     description = models.CharField(max_length=1000, help_text='Enter the description of this award.')
-    priority = models.IntegerField(default=100, help_text="Priority value for awards ordering in view.")
+    priority = models.PositiveIntegerField(default=100, help_text="Priority value for awards ordering in view.")
 
     def __str__(self):
         return self.name
