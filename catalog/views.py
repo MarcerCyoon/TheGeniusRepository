@@ -15,7 +15,10 @@ def double_quote_split(value):
     lex.quotes = '"'
     lex.whitespace_split = True
     lex.commenters = ''
-    return list(lex)
+    try:
+        return list(lex)
+    except ValueError:
+        return ['"']
 
 SEARCH_FIELDS = ["name", "tag", "designer", "award", "org", "type", "players"]
 
@@ -40,7 +43,11 @@ class Expression:
             self.field = field
 
         self.operator = operator
-        self.search = search.replace('"', '')
+
+        if search.count('"') == 2:
+            self.search = search.replace('"', '')
+        else:
+            self.search = search
 
 class Query:
     def __init__(self):
@@ -275,7 +282,6 @@ class SearchView(generic.ListView):
         if query is not None:
             context["opengraph_title"] = "Search Results"
             context["opengraph_description"] = f"Search results for {", ".join(double_quote_split(query))}."
-            print(", ".join(double_quote_split(query)))
         else:
             context["opengraph_title"] = "Search"
             context["opengraph_description"] = "Search for matches on The Genius Repository."
