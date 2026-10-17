@@ -188,7 +188,10 @@ def tag_generator(request):
         for tag in tags:
             rulesets = rulesets.filter(Q(tags__name__contains=tag))
 
-        rulesets = rulesets.distinct().select_related('ORG').select_related('match').prefetch_related('tags')
+        rulesets = rulesets.distinct().select_related('ORG').select_related('match').prefetch_related('match__designers').prefetch_related('tags')
+
+        for ruleset in rulesets:
+            ruleset.org_list = ORG.objects.filter(ruleset__in=ruleset.match.rulesets.all()).distinct()
 
         context = {
             'generated_tags': tags,
@@ -269,7 +272,7 @@ class SearchView(generic.ListView):
                     else:
                         object_list = object_list.filter(Q(player_count__exact=exp.search))
 
-            object_list = object_list.distinct().select_related('ORG').select_related('match').prefetch_related('tags').order_by('ordering', 'id')
+            object_list = object_list.distinct().select_related('ORG').select_related('match').prefetch_related('match__designers').prefetch_related('tags').order_by('ordering', 'id')
             return object_list
         else:
             return Ruleset.objects.none()
@@ -293,13 +296,12 @@ class SearchView(generic.ListView):
             context["opengraph_description"] = "Search for matches on The Genius Repository."
 
         context["filtered_ruleset_list"] = []
-        context["filtered_ruleset_nums"] = []
         filtered_pks = []
 
         for object in context["object_list"]:
             if object.match.pk not in filtered_pks:
+                object.org_list = ORG.objects.filter(ruleset__in=object.match.rulesets.all()).distinct()
                 context["filtered_ruleset_list"].append(object)
-                context["filtered_ruleset_nums"] = Ruleset.objects.filter(match__pk=object.match.pk)
                 filtered_pks.append(object.match.pk)
 
         return context
@@ -565,10 +567,13 @@ class ORGDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ORGDetailView, self).get_context_data(**kwargs)
-        context['ruleset_list'] = context['org'].ruleset_set.all().select_related('ORG').select_related('match')
+        context['ruleset_list'] = context['org'].ruleset_set.all().select_related('ORG').select_related('match').prefetch_related('match__designers').prefetch_related('tags')
         context['ruleset_exists'] = len(context['ruleset_list']) > 0
 
         twists = context['org'].twists.split("\n")
         context['twists'] = twists
 
+        for ruleset in context['ruleset_list']:
+            ruleset.org_list = ORG.objects.filter(ruleset__in=ruleset.match.rulesets.all()).distinct()
+        
         return context

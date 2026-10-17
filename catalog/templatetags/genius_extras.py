@@ -169,12 +169,10 @@ def org_join(value):
 	"""
 	Filter to create a sorttable_customkey
 	for the ORG column when given a list of
-	Rulesets.
+	ORGs.
 	"""
-
 	ret = []
 	for ele in value:
-		if hasattr(ele, "ORG"):
-			ret.append(ele.ORG.name)
+		ret.append(ele.name.lower().replace(" ", ""))
 
 	return "_".join(ret)

@@ -75,11 +75,11 @@
 					<td>
 						{{ ruleset.match.designers.all|join:', ' }}
 					</td>
-					<td style="text-align: center;" sorttable_customkey="{{ ruleset.match.rulesets.all|org_join }}">
+					<td style="text-align: center;" sorttable_customkey="{{ ruleset.org_list|org_join }}">
 						<div class="icon-box">
-							{% for subruleset in ruleset.match.rulesets.all %}
-								{% with filename=subruleset.ORG|org_name %}
-									<a href="{{ subruleset.ORG.get_absolute_url }}"><img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon" alt="{{ subruleset.ORG }}" title="{{ subruleset.ORG }}"></img></a>
+							{% for org in ruleset.org_list %}
+								{% with filename=org|org_name %}
+									<a href="{{ org.get_absolute_url }}"><img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon" alt="{{ org }}" title="{{ org }}"></img></a>
 								{% endwith %}
 							{% endfor %}
 						</div>
