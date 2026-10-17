@@ -439,7 +439,7 @@ class MatchDetailView(generic.DetailView):
         import re, copy
         context = super(MatchDetailView, self).get_context_data(**kwargs)
 
-        query_ruleset = self.request.GET.get('ruleset')
+        query_ruleset = self.request.GET.get('rs')
 
         # default parameters: the first tab and the match name
         context['active_ruleset'] = -1

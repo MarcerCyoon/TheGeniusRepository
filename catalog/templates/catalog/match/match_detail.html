@@ -15,7 +15,7 @@
 
 {{ match.summary }}" property="og:description"/>
   {% if active_ruleset != -1 %}
-    <meta content="https://geniusrepository.org{{ match.get_absolute_url }}?ruleset={{ active_ruleset }}" property="og:url"/>
+    <meta content="https://geniusrepository.org{{ match.get_absolute_url }}?rs={{ active_ruleset }}" property="og:url"/>
   {% else %}
     <meta content="https://geniusrepository.org{{ match.get_absolute_url }}" property="og:url"/>
   {% endif %}
@@ -199,7 +199,7 @@
 
   tabs.forEach(tab => {
     tab.addEventListener('shown.bs.tab', event => {
-      const value = event.target.pk;
+      const value = event.target.id;
       const id = value.replace(/\D/g, "");
       changeAlias(id);
     })
