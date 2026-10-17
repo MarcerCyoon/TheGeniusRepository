@@ -210,7 +210,7 @@ class SearchView(generic.ListView):
 
         if query is not None:
             query_obj, _ = parse_query(query)
-            object_list = Ruleset.objects.all()
+            object_list = Ruleset.objects.exclude(rules="-")
             
             for exp in query_obj.expressions:
                 if exp.field == 'name':
