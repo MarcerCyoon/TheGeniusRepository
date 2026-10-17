@@ -477,7 +477,7 @@ class MatchDetailView(generic.DetailView):
             if query_ruleset is not None and query_ruleset.isdigit() and ruleset.pk == int(query_ruleset):
                 context['active_ruleset'] = int(query_ruleset)
 
-                if ruleset.alias is not None:
+                if ruleset.alias is not None and ruleset.alias != "":
                     context['ruleset_name'] = ruleset.alias
 
             # split rules by \r\n so that each can be displayed in
