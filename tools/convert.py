@@ -200,7 +200,7 @@ if __name__ == "__main__":
                 used_headers.append(rules_headers[index])
 
                 episode = get_episode(rules_headers[index])
-                ruleset = create_new_ruleset(old_match['id'], rules_list[index], org, episode, old_match['tags'], old_match['min_players'])  
+                ruleset = create_new_ruleset(old_match['id'], rules_list[index].replace('\r\n', '', 1), org, episode, old_match['tags'], old_match['min_players'])  
 
             else:
                 ID_TO_ORG_NAME = {y: x for x, y in ORG_NAME_TO_ID.items()}
@@ -225,7 +225,7 @@ if __name__ == "__main__":
                     if org == "-1":
                         print(f"A KeyError occurred: {header}. Terminating converting this match.")
 
-                    ruleset = create_new_ruleset(old_match['id'], rules, org, episode, old_match['tags'], old_match['min_players'])
+                    ruleset = create_new_ruleset(old_match['id'], rules.replace('\r\n', '', 1), org, episode, old_match['tags'], old_match['min_players'])
                     rulesets.append(ruleset)
                 
         matches.append(new_match)
@@ -233,14 +233,13 @@ if __name__ == "__main__":
 
     print(f"Matches in the Repo: {validate_matches} / Rulesets in the Repo: {validate_rulesets} / Missing Rulesets: {missing}")
     print(f"Converted Matches: {len(matches)} / Converted Rulesets: {len(rulesets)}")
+    print("Failed Conversions: " + str(failed) + "\n")
 
     with open('NEW_MATCHES.json', 'w', encoding='utf-8') as file:
         json.dump(matches, file, indent=4)
 
     with open('NEW_RULESETS.json', 'w', encoding='utf-8') as file:
         json.dump(rulesets, file, indent=4)
-
-    print("Failed conversions: " + str(failed) + "\n")
 
     print("The below Matches had a **variable player** count stored on the repo. This information is lost during conversion, thus it must be reconstructed manually.")
     print(variable_player_size)
