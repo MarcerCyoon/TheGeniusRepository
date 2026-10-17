@@ -5,6 +5,7 @@ from typing import Any
 from django.db.models.query import QuerySet
 from django.shortcuts import redirect, render
 from django.views import generic
+from django.views.decorators.cache import never_cache
 from django.db.models import F, Q, Value, Count, CharField, Prefetch
 from django.db.models.functions import Concat
 
@@ -162,6 +163,7 @@ def index(request):
 
     return render(request, 'index.html', context=context)
 
+@never_cache
 def random_redirect(request):
     matches = Match.objects.values_list('pk', flat=True)
     rand = random.choice(matches)
