@@ -162,10 +162,10 @@ def index(request):
     return render(request, 'index.html', context=context)
 
 def random_redirect(request):
-    matches = list(Match.objects.all().only('pk'))
-    random.shuffle(matches)
+    matches = Match.objects.values_list('pk', flat=True)
+    rand = random.choice(matches)
 
-    return redirect('match-detail', pk=matches[0].pk, permanent=True)
+    return redirect('match-detail', pk=rand, permanent=True)
     
 def about_us(request):
     return render(request, 'about_us.html')
