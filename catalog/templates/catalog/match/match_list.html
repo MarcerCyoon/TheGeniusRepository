@@ -41,7 +41,7 @@
 				<td>
 					<a href="{{ match.get_absolute_url }}">{{ match.name }}</a>
 					<div style="font-size: 8px;">
-						{% if match.aliases.count > 1 %}
+						{% if match.aliases %}
 							({{ match.aliases|join:", " }})
 						{% endif %}
 					</div>

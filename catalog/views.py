@@ -138,14 +138,15 @@ def annotate_match(match):
     match.player_counts = "/".join([str(count) for count in sorted(set(ruleset.player_count for ruleset in rulesets))])
 
     tags = set()
-    match.aliases = set()
+    aliases = set()
     for ruleset in rulesets:
         for tag in ruleset.tags.all():
             tags.add(tag)
 
-        if ruleset.alias:
-            match.aliases.add(ruleset.alias)
+        if ruleset.alias is not None and ruleset.alias != "":
+            aliases.add(ruleset.alias)
 
+    match.aliases = list(aliases)
     match.tags = sorted(tags, key=lambda tag: tag.name)
 
     return match
