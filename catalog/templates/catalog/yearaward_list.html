@@ -41,15 +41,13 @@
 							{% endif %}	
 						</td>
 							{% for match in award.match_set.all %}
-							<td>
 								{% if forloop.last %}
 									<a href="{{ match.get_absolute_url }}">{{ match }}</a> by {{ match.designers.all|join:"/"}}
 								{% else %}
-									<a href="{{ match.get_absolute_url }}">{{ match }}</a> by {{ match.designers.all|join:"/"}}
+									<a href="{{ match.get_absolute_url }}">{{ match }}</a> by {{ match.designers.all|join:"/"}}, 
 								{% endif %}
-							</td>
 							{% endfor %}
-						<td></td>
+						</td>
 					</tr>
 				{% endfor %}
 			{% endfor %}
