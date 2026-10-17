@@ -102,6 +102,12 @@ text-shadow: 0px -1px 0px rgba(255,255,255,0.3), 0px 1px 0px rgba(0,0,0,0.7); */
   transform: translate(0%, -3%);
 }
 
+.rules-tab {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+}
+
 /* tab font color */
 .tab-color {
 	color:rgb(0, 0, 0)
