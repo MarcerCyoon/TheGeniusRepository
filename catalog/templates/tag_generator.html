@@ -76,11 +76,13 @@
 						{{ ruleset.match.designers.all|join:', ' }}
 					</td>
 					<td style="text-align: center;" sorttable_customkey="{{ ruleset.match.rulesets.all|org_join }}">
-						{% for subruleset in ruleset.match.rulesets.all %}
-							{% with filename=subruleset.ORG|org_name %}
-								<a href="{{ subruleset.ORG.get_absolute_url }}"><img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon" alt="{{ subruleset.ORG }}" title="{{ subruleset.ORG }}"></img></a>
-							{% endwith %}
-						{% endfor %}
+						<div class="icon-box">
+							{% for subruleset in ruleset.match.rulesets.all %}
+								{% with filename=subruleset.ORG|org_name %}
+									<a href="{{ subruleset.ORG.get_absolute_url }}"><img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon" alt="{{ subruleset.ORG }}" title="{{ subruleset.ORG }}"></img></a>
+								{% endwith %}
+							{% endfor %}
+						</div>
 					</td>
 					<td style="text-align: center;">
 						{{ ruleset.player_count }}
