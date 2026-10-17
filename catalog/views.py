@@ -88,7 +88,7 @@ def parse_query(query: str):
     query = query.replace("“", "\"").replace("‘", "\"") 
 
     # double_quote_split preserves double-quotes
-    criteria = double_quote_split(query) 
+    criteria = double_quote_split(query)
     query_obj = Query()
 
     # TODO: implement NOT/OR/AND
@@ -418,10 +418,6 @@ class YearAwardListView(generic.ListView):
             else:
                 context['sorted_award_dct'][award.year] = [award]
 
-        # # sort by MM/DM
-        # for key, lst in context['sorted_award_dct'].items():
-        #     lst.sort()
-
         return context
 
 class MatchDetailView(generic.DetailView):
@@ -540,10 +536,6 @@ class MatchDetailView(generic.DetailView):
 
         context['rulesets'] = rulesets
 
-        # if len(context['rulesets']) > 0:
-        #     for rule in context['rulesets'][0].rules_formatted:
-        #         print(rule)
-
         return context
 
 class DesignerDetailView(generic.DetailView):
@@ -576,7 +568,6 @@ class ORGDetailView(generic.DetailView):
         context['ruleset_list'] = context['org'].ruleset_set.all().select_related('ORG').select_related('match')
         context['ruleset_exists'] = len(context['ruleset_list']) > 0
 
-        # split by \n
         twists = context['org'].twists.split("\n")
         context['twists'] = twists
 
