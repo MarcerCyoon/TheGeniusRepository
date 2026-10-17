@@ -287,7 +287,7 @@ class SearchView(generic.ListView):
 
         if query is not None:
             context["opengraph_title"] = "Search Results"
-            context["opengraph_description"] = f"Search results for {", ".join(double_quote_split(query))}."
+            context["opengraph_description"] = f"Search results for {', '.join(double_quote_split(query))}."
         else:
             context["opengraph_title"] = "Search"
             context["opengraph_description"] = "Search for matches on The Genius Repository."
