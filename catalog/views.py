@@ -229,9 +229,9 @@ class SearchView(generic.ListView):
             for exp in query_obj.expressions:
                 if exp.field == 'name':
                     if exp.operator == "=":
-                        object_list = object_list.filter(Q(alias__icontains=exp.search) | (Q(alias=None) & Q(match__name__icontains=exp.search)))
+                        object_list = object_list.filter(Q(alias__icontains=exp.search) | ((Q(alias=None) | Q(alias__iexact="")) & Q(match__name__icontains=exp.search)))
                     else:
-                        object_list = object_list.filter(~Q(alias__icontains=exp.search) | (Q(alias=None) & Q(match__name__icontains=exp.search)))
+                        object_list = object_list.filter(~Q(alias__icontains=exp.search) | ((Q(alias=None) | Q(alias__iexact="")) & Q(match__name__icontains=exp.search)))
                 
                 elif exp.field == 'tag':
                     if exp.operator == "=":
