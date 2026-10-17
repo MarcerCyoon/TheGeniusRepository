@@ -174,7 +174,7 @@ class MatchAdmin(ImportExportModelAdmin):
     resource_classes = [MatchResource, MatchBasicResource]
     list_display = ('match_type', 'name', 'display_designers', 'display_ORGs')
     list_display_links = ['name']
-    list_filter = ('match_type', 'designers')
+    list_filter = ('match_type', 'designers',)
     
     inlines = [RulesetInline]
     filter_horizontal = ('designers', 'awards',)
@@ -189,10 +189,11 @@ class RulesetAdmin(ImportExportModelAdmin):
 
     @admin.display(description="Name")
     def get_name(self, ruleset):
-        return ruleset.alias if ruleset.alias is not None else ruleset.match.name
+        return ruleset.alias if ruleset.alias is not None and ruleset.alias != "" else ruleset.match.name
     
     list_display = ('get_match_type', 'get_name', 'ORG', 'display_tags')
     list_display_links = ['get_name']
+    list_filter = ('ORG',)
     
     filter_horizontal = ('tags',)
 
