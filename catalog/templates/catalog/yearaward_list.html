@@ -39,6 +39,7 @@
 								<strong style="color:#990000;">{{ award.award.name }}</strong>
 							{% endif %}	
 						</td>
+						<td>
 							{% for match in award.match_set.all %}
 								{% if forloop.last %}
 									<a href="{{ match.get_absolute_url }}">{{ match }}</a> by {{ match.designers.all|join:"/"}}
