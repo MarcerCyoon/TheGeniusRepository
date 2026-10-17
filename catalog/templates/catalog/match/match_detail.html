@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+{% load markdownify %}
+{% load genius_extras %}
+{% load static %}
+
+{% block title %}
+      <title>{{ ruleset_name }} | The Genius Repository</title>
+{% endblock %}
+
+{% block embed %}
+	<meta content="{{ ruleset_name }}" property="og:title"/>
+	<meta content="website" property="og:type"/>
+	<meta content="The Genius Repository" name="og:site_name"/>
+	<meta content="{{ match.designers.all|join:", " }}
+
+{{ match.summary }}" property="og:description"/>
+  {% if active_ruleset != -1 %}
+    <meta content="https://geniusrepository.org{{ match.get_absolute_url }}?rs={{ active_ruleset }}" property="og:url"/>
+  {% else %}
+    <meta content="https://geniusrepository.org{{ match.get_absolute_url }}" property="og:url"/>
+  {% endif %}
+	<meta content="#ffcc00" name="theme-color"/>
+  <meta content="{{ match.designers.all|join:", " }}" name="author"/>
+{% endblock %}
+
+{% block content %}
+  <h1 class="page-header match-title mt-3 mb-1">{{ ruleset_name }}</h1>
+  <p style="margin-bottom: 0.8rem; text-align: center;">{{ match.summary }}</p>
+
+  {% if match.match_type == "MM" %}
+    <table class="table table-borderless table-primary table-sm table-striped table-small mx-auto mm-facts">
+  {% else %}
+    <table class="table table-borderless table-danger table-sm table-striped table-small mx-auto dm-facts">
+  {% endif %}
+      <tr style="height: 50px;">
+        <td>
+          <strong>Designer(s):</strong>
+          {% for designer in match.designers.all %}
+            {% if forloop.last %}
+              <a href="{{ designer.get_absolute_url }}">{{ designer.name }}</a>
+            {% else %}
+              <a href="{{ designer.get_absolute_url }}">{{ designer.name }}</a>, 
+            {% endif %}
+          {% endfor %}
+        </td>
+        <td>
+            <strong>Match Type:</strong> {{ match.match_type }} (for {{ match.player_counts }} players)
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <strong>Featured in:</strong>
+            {% for org in match.ORGs %}
+              {% if forloop.last %}
+                <a href="{{ org.get_absolute_url }}">{{ org.name }}</a>
+              {% else %}
+                <a href="{{ org.get_absolute_url }}">{{ org.name }}</a>, 
+              {% endif %}
+            {% endfor %}
+        </td>
+      </tr>
+      {% if match.awards.all %}
+        <tr>
+          <td colspan="2">
+            <strong>Awards:</strong>
+              {% for award in match.awards.all %}
+                {% if forloop.last %}
+                  <span>{{ award }}</span>
+                {% else %}
+                  <span>{{ award }}</span>, 
+                {% endif %}
+              {% endfor %}
+          </td>
+        </tr>
+      {% endif %}
+      {% if match.see_also.all %}
+        <tr>
+          <td colspan="2">
+            <strong>See Also:</strong>
+              {% for match in match.see_also.all %}
+                {% if forloop.last %}
+                  <a href="{{ match.get_absolute_url }}">{{ match.name }}</a>
+                {% else %}
+                  <a href="{{ match.get_absolute_url }}">{{ match.name }}</a>, 
+                {% endif %}
+              {% endfor %}
+          </td>
+        </tr>
+      {% endif %}
+    </table>
+
+  <div class="container mt-4 mx-auto">
+    <ul class="nav nav-tabs" id="rulesTab" role="tablist">
+      {% for ruleset in rulesets %}
+        {% if active_ruleset == -1 and forloop.first or active_ruleset == ruleset.pk %}
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active tab-color" id="rules{{ruleset.pk}}-tab" data-bs-toggle="tab" type="button" role="tab" data-bs-target="#rules{{ruleset.pk}}" aria-controls="rules{{ruleset.pk}}" aria-selected="true">
+              <div style="display: flex; align-items: center;">
+                <strong>{{ruleset.episode}}</strong> &nbsp;
+                {% with filename=ruleset.ORG|org_name %}
+                  <img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon" alt="{{ ruleset.ORG }}" title="{{ ruleset.ORG }}"></img>
+                {% endwith %}
+              </div>
+            </a>
+          </li>
+        {% else %}
+          <li class="nav-item" role="presentation">
+            <button class="nav-link tab-color" id="rules{{ruleset.pk}}-tab" data-bs-toggle="tab" type="button" role="tab" data-bs-target="#rules{{ruleset.pk}}" aria-controls="rules{{ruleset.pk}}" aria-selected="false">
+              <div style="display: flex; align-items: center;">
+                <strong>{{ruleset.episode}}</strong> &nbsp;
+                {% with filename=ruleset.ORG|org_name %}
+                  <img src="{% static 'images/icons/'|add:filename|add:'.png' %}" class="icon" alt="{{ ruleset.ORG }}" title="{{ ruleset.ORG }}"></img>
+                {% endwith %}
+              </div>
+            </a>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+
+    <div class="tab-content" id="rulesTabContent">
+      <br>
+      {% if rulesets.count == 0 %}
+        <p style="text-align: center;">There are no rulesets for this game.</p>
+      {% endif %}
+
+      {% for ruleset in rulesets %}
+        {% if active_ruleset == -1 and forloop.first or active_ruleset == ruleset.pk %}
+          <div class="tab-pane fade active show" id="rules{{ruleset.pk}}" role="tabpanel" aria-labelledby="rules{{ruleset.pk}}-tab">
+              {% for rule in ruleset.rules_formatted %}
+                {% if rule == '' %}
+                  <br>
+                {% elif '.discordapp.' in rule or '.imgur.' in rule %}
+                  <div class="text-center"><img src={{ rule }}></div>
+                {% else %}
+                  <div class="pr-2">{{ rule|discordify|markdownify }}</div>
+                {% endif %}
+              {% endfor %}
+                <hr>
+                <div style="margin-left:20px;margin-top:20px">
+                  <h4>Tags</h4>
+                  {% for tag in ruleset.tags.all %}
+                    <hr>
+                    <p>
+                      <span class="tag">{{ tag.name }}</span>
+                      <span class="tag_hide">&nbsp;&nbsp;&nbsp;({{tag.description}})</span>
+                    </p>
+                  {% endfor %}
+                  <br>
+                </div>
+          </div>
+        {% else %}
+          <div class="tab-pane fade" id="rules{{ruleset.pk}}" role="tabpanel" aria-labelledby="rules{{ruleset.pk}}-tab">
+            {% for rule in ruleset.rules_formatted %}
+              {% if rule == '' %}
+                <br>
+              {% elif '.discordapp.' in rule or '.imgur.' in rule %}
+                <div class="text-center"><img src={{ rule }}></div>
+              {% else %}
+                <div class="pr-2">{{ rule|discordify|markdownify }}</div>
+              {% endif %}
+            {% endfor %}
+                <hr>
+                <div style="margin-left:20px;margin-top:20px">
+                  <h4>Tags</h4>
+                  {% for tag in ruleset.tags.all %}
+                    <hr>
+                    <p>
+                      <span class="tag">{{ tag.name }}</span>
+                      <span class="tag_hide">&nbsp;&nbsp;&nbsp;({{tag.description}})</span>
+                    </p>
+                  {% endfor %}
+                  <br>
+                </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+<script>
+  {% comment %} let aliases = new Array({{ rulesets.count }}); {% endcomment %}
+  let aliases = {};
+  {% for ruleset in rulesets %}
+    {% if ruleset.alias %}
+      aliases[{{ ruleset.pk }}] = "{{ ruleset.alias }}";
+    {% else %}
+      aliases[{{ ruleset.pk }}] = "{{ match.name }}";
+    {% endif %}
+  {% endfor %}
+
+  const changeAlias = (id) => {
+    const alias = aliases[parseInt(id)];
+    const title = document.querySelector(`h1`);
+    title.innerHTML = alias; // TODO: have this fade in and out maybe?
+  }
+
+  const tabs = document.querySelectorAll('button[data-bs-toggle="tab"]')
+
+  tabs.forEach(tab => {
+    tab.addEventListener('shown.bs.tab', event => {
+      const value = event.target.id;
+      const id = value.replace(/\D/g, "");
+      changeAlias(id);
+    })
+  });
+</script>
+{% endblock %}

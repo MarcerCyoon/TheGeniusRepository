@@ -16,7 +16,7 @@
 {% endblock %}
 
 {% block content %}
-	<h1 class="mt-3">List of Game Tags</h1>
+	<h1 class="mt-3 mb-3 page-header">Game Tags</h1>
 	{% if tag_list %}
 	<table class="sortable table table-secondary table-sm table-striped table-bordered table-hover">
 		<thead class="table-dark">
@@ -35,7 +35,7 @@
 				{{ tag.description }}
 			</td>
 			<td>
-				{{ tag.match_set.all.count }}
+				{{ tag.ruleset_set.all.count }}
 			</td>
 		</tr>
 	{% endfor %}

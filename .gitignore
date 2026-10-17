@@ -2,6 +2,11 @@
 *.sqlite3
 .env
 .DS_Store
+TODO.md
+*.json
+
+# Ignore Django Debug Toolbar
+staticfiles/debug_toolbar/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

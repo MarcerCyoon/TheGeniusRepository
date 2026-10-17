@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<h1 class="mt-3">Welcome to the Genius Repository!</h1>
+	<h1 class="mt-3 mb-3 page-header">Welcome to the Genius Repository!</h1>
 	<p>Here, you'll find a collection of all games written by, and for, the Genius ORG community.</p>
 	<p>The Genius ORG community is a community surrounding <a href="https://en.wikipedia.org/wiki/The_Genius_(TV_series)">The Genius</a>, a South Korean reality TV show in which 13 contestants compete in different
 		board, card, and strategy games to ultimately come out the winner.</p>
@@ -16,5 +16,9 @@
 
 	<hr>
 	
-	<h4>Currently, the repository contains {{ num_matches }} matches in its archive.</h4>
+	<h4 style="text-align: center;"> Currently, the repository contains {{ num_matches }} matches in its archive.</h4>
+
+	<div class="d-flex me-auto justify-content-center align-items-center mt-3">
+		<button type="button" class="btn btn-lg p-3 btn-primary" onclick="window.location.assign('{% url 'random' %}')">Go to a Random Match!</button>
+	</div>
 {% endblock %}

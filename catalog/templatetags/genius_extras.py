@@ -131,7 +131,7 @@ def parse_emojis(value):
 
 	return value
 
-@register.filter(name='lookup')
+@register.filter
 def lookup(value, key):
 	return value.get(key)
 
@@ -155,6 +155,26 @@ def discordify(value):
 @register.filter
 @stringfilter
 def org_name(value):
+	"""
+	Filter to parse an "ORG Name" into
+	its corresponding icon file name.
+	"""
+
 	value = value.replace(":", "").replace("'", "").replace("-", " ")
 	value = [v for v in value.split(" ") if v != ""] # remove empty strings
 	return "_".join(value).lower()
+
+@register.filter
+def org_join(value):
+	"""
+	Filter to create a sorttable_customkey
+	for the ORG column when given a list of
+	Rulesets.
+	"""
+
+	ret = []
+	for ele in value:
+		if hasattr(ele, "ORG"):
+			ret.append(ele.ORG.name)
+
+	return "_".join(ret)
