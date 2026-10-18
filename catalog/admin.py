@@ -175,6 +175,7 @@ class MatchAdmin(ImportExportModelAdmin):
     list_display = ('match_type', 'name', 'display_designers', 'display_ORGs')
     list_display_links = ['name']
     list_filter = ('match_type', 'designers',)
+    search_fields = ['name']
     
     inlines = [RulesetInline]
     filter_horizontal = ('designers', 'awards',)
@@ -194,6 +195,7 @@ class RulesetAdmin(ImportExportModelAdmin):
     list_display = ('get_match_type', 'get_name', 'ORG', 'display_tags')
     list_display_links = ['get_name']
     list_filter = ('ORG',)
+    search_fields = ['match__name', 'alias']
     
     filter_horizontal = ('tags',)
 
