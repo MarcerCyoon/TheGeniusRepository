@@ -6,7 +6,7 @@ from django.db.models.query import QuerySet
 from django.shortcuts import redirect, render
 from django.views import generic
 from django.views.decorators.cache import never_cache
-from django.db.models import F, Q, Value, Count, CharField, Prefetch
+from django.db.models import F, Q, Value, Count, CharField, Prefetch, Case, When
 from django.db.models.functions import Concat
 
 from .models import Ruleset, Match, Designer, ORG, Tag, YearAward
@@ -204,7 +204,9 @@ def tag_generator(request):
                         )
                     )
                     .prefetch_related('tags')
-                )
+                ).annotate(display_name=Case(
+                    When(Q(alias__iexact="") | Q(alias=None), then=F('match__name')), default=F('alias'), output_field=CharField())
+                ).order_by('-match__match_type', 'display_name')
 
         context = {
             'generated_tags': tags,
@@ -603,7 +605,9 @@ class ORGDetailView(generic.DetailView):
                                             queryset=Ruleset.objects.order_by('ordering', 'id').select_related('ORG'))
                                         )
                                     .prefetch_related('tags')
-                                )
+                                ).annotate(display_name=Case(
+                                    When(Q(alias__iexact="") | Q(alias=None), then=F('match__name')), default=F('alias'), output_field=CharField())
+                                ).order_by('-match__match_type', 'display_name')
 
         context['ruleset_exists'] = len(context['ruleset_list']) > 0
 
