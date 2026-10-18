@@ -251,9 +251,9 @@ class SearchView(generic.ListView):
 
                 elif exp.field == 'award':
                     if exp.operator == "=":
-                        object_list = object_list.alias(award_name=Concat(F('match_awards__award__name'), Value(' '), F('match__awards__year'), output_field=CharField())).filter(Q(award_name__icontains=exp.search))
+                        object_list = object_list.alias(award_name=Concat(F('match__awards__award__name'), Value(' '), F('match__awards__year'), output_field=CharField())).filter(Q(award_name__icontains=exp.search))
                     else:
-                        object_list = object_list.alias(award_name=Concat(F('match_awards__award__name'), Value(' '), F('match__awards__year'), output_field=CharField())).filter(~Q(award_name__icontains=exp.search))
+                        object_list = object_list.alias(award_name=Concat(F('match__awards__award__name'), Value(' '), F('match__awards__year'), output_field=CharField())).filter(~Q(award_name__icontains=exp.search))
 
                 elif exp.field == 'ORG':
                     if exp.operator == "=":
@@ -610,6 +610,8 @@ class ORGDetailView(generic.DetailView):
                                 ).order_by('-match__match_type', 'display_name')
 
         context['ruleset_exists'] = len(context['ruleset_list']) > 0
+
+        print(context['ruleset_list'][1])
 
         twists = context['org'].twists.split("\n")
         context['twists'] = twists
