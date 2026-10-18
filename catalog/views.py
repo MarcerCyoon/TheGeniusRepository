@@ -424,7 +424,7 @@ class TagListView(generic.ListView):
     model = Tag
 
     def get_queryset(self):
-        queryset = Tag.objects.all().annotate(count=Count('ruleset'))
+        queryset = Tag.objects.all().annotate(count=Count('ruleset')).order_by('name')
         return queryset
 
 # TODO: Awards Detail View
