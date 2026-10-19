@@ -611,8 +611,6 @@ class ORGDetailView(generic.DetailView):
 
         context['ruleset_exists'] = len(context['ruleset_list']) > 0
 
-        print(context['ruleset_list'][1])
-
         twists = context['org'].twists.split("\n")
         context['twists'] = twists
         
