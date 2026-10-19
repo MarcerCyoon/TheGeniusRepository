@@ -196,13 +196,13 @@ p, ul, ol {
 }
 
 /* to make tag descriptions appear on hover */
-.tag:hover + .tag_hide {
+.tag:hover + .tag-hide {
   visibility: visible;
   color: #5d5d5d;
   transition: 0.4s;
 }
 
-.tag_hide {
+.tag-hide {
   visibility: hidden;
   color: rgb(214, 212, 212);
 }
