@@ -195,16 +195,61 @@ p, ul, ol {
 	margin-bottom: 0rem;
 }
 
+/* side by side tag view */
+.tag-list {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 80%;
+  margin: 0 auto;
+}
+
+/* pretty tag button background :) */
+.tag {
+  padding: 5px 10px;
+  background-color: #fff;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  background-image: linear-gradient(#ffffff, #ffffff), linear-gradient(135deg, #F2AB30, #D88C00);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+.tag a {
+  color: #333;
+  text-decoration: none;
+}
+
 /* to make tag descriptions appear on hover */
-.tag:hover + .tag-hide {
-  visibility: visible;
-  color: #5d5d5d;
-  transition: 0.4s;
+.tag-hover {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 5px;
 }
 
 .tag-hide {
+  display: -webkit-box;
+  -webkit-line-clamp: 8;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
   visibility: hidden;
-  color: rgb(214, 212, 212);
+  width: 250px;
+  background-color: #000;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  bottom: 35px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.tag-hover:hover .tag-hide {
+  visibility: visible;
 }
 
 /* manually setting navbar brand logo to look nice */

@@ -4,6 +4,7 @@
 .DS_Store
 TODO.md
 *.json
+.venv/
 
 # Ignore Django Debug Toolbar
 staticfiles/debug_toolbar/

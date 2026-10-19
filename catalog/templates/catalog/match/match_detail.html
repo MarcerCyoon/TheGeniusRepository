@@ -138,14 +138,15 @@
               {% endfor %}
                 <hr>
                 <div style="margin-left:20px;margin-top:20px">
-                  <h4>Tags</h4>
+                  <h4 style="text-align:center;margin-bottom:20px">Tags</h4>
+                  <div class="tag-list">
                   {% for tag in ruleset.tags.all %}
-                    <hr>
-                    <p>
-                      <span class="tag">{{ tag.name }}</span>
-                      <span class="tag-hide">&nbsp;&nbsp;&nbsp;({{tag.description}})</span>
+                    <p class="tag-hover">
+                      <span class="tag"><a href="{% url 'search' %}?q=tag%3D&quot;{{ tag.name }}&quot;">{{ tag.name }}</a></span>
+                      <span class="tag-hide">{{tag.description}}</span>
                     </p>
                   {% endfor %}
+                  </div>
                   <br>
                 </div>
           </div>
