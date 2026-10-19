@@ -12,7 +12,7 @@ class Ruleset(models.Model):
     player_count = models.PositiveIntegerField(help_text="Number of players needed to play this match with this Ruleset.")
     ordering = models.IntegerField(help_text="Helper integer used to give rulesets of the same match a proper order. If there is a tie in order, the ruleset that was created first takes default precedence.", default=0)
 
-    match = models.ForeignKey('Match', on_delete=models.SET_NULL, null=True, related_name="rulesets")
+    match = models.ForeignKey('Match', on_delete=models.CASCADE, null=True, related_name="rulesets")
 
     class Meta:
         verbose_name = 'Ruleset'
@@ -36,6 +36,7 @@ class Ruleset(models.Model):
 class Match(models.Model):
     name = models.CharField(max_length=200)
     designers = models.ManyToManyField('Designer', verbose_name="Designer(s)")
+    # contributors = models.ManyToManyField('Designer', verbose_name="Contributor(s)", help_text="Contributors are those who were not one of the main designers, but still contributed to elements of the game.", blank=True)
     summary = models.TextField(max_length=2000, help_text="Enter a quick summary of the Match here.")
 
     MATCH_TYPE = (
@@ -144,7 +145,7 @@ class YearAward(models.Model):
         return self.award.name + " " + str(self.year)
 
     class Meta:
-        ordering = ['year', 'award']
+        ordering = ['-year', 'award']
 
 class Award(models.Model):
     name = models.CharField(max_length=200, help_text="Enter the name of this award (e.g. \'Most Fun MM\').")
