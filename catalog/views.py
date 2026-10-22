@@ -522,8 +522,10 @@ def code_join_together(rules):
                 ends.append(i)
         else:
             if re.search(r'^```', rule) is not None:
-                in_code = True
-                begins.append(i)
+                # check that it's not a single-line code header
+                if rule.count('```') == 1:
+                    in_code = True
+                    begins.append(i)
 
     return join_together(begins, ends, rules)
 
@@ -570,7 +572,7 @@ class MatchDetailView(generic.DetailView):
             rulesets_line_breaks = list_join_together(r'[0-9]+\.', rulesets_line_breaks)
             rulesets_line_breaks = list_join_together(r'- ', rulesets_line_breaks)
             rulesets_line_breaks = code_join_together(rulesets_line_breaks)
-            
+
             ruleset.rules_formatted = rulesets_line_breaks
 
         context['rulesets'] = rulesets
