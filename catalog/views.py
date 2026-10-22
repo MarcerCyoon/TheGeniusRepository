@@ -1,4 +1,5 @@
 import random
+import re
 import shlex
 from typing import Any
 
@@ -450,6 +451,82 @@ class YearAwardListView(generic.ListView):
 
         return context
 
+def join_together(begins, ends, rules):
+    """
+    Join together lines at indices
+    (begin, end) for every i in
+    len(begins) == len(ends). If the length
+    of begins and ends is not equal, the
+    code does nothing and returns rules as-is.
+
+    This function is necessary as we are modifying
+    rules in-place, and, thus, need to keep
+    track of changes to indices as we go.
+    """
+    change = 0 # how much have we shortened the list so far?
+
+    if len(begins) != len(ends):
+        # there was some sort of error. return rules without processing.
+        return rules
+
+    for begin, end in zip(begins, ends):
+        true_begin = begin - change
+        true_end = end - change
+        rules[true_begin:true_end+1] = ['\n'.join(rules[true_begin:true_end+1])]
+        change += (true_end - true_begin)
+
+    return rules
+
+def list_join_together(regex, rules):
+    """
+    Join together lists (both
+    unordered and ordered), so
+    that they are rendered as
+    a single element.
+    """
+    begins, ends, begin, end = [], [], -1, -1
+
+    for i, rule in enumerate(rules):
+        if re.match(regex, rule) is not None:
+            if begin == -1:
+                begin = i
+                end = i
+            else:
+                end = i
+        else:
+            if begin != -1:
+                begins.append(begin)
+                ends.append(end)
+                # b = rules.index(begin) # there is a uniqueness assumption here. so if there are two identical lines this might fail.
+                # e = rules.index(end)
+                # rules[b:e+1] = ['\n'.join(rules[b:e+1])]
+                begin = -1
+                end = -1
+    
+    return join_together(begins, ends, rules)
+
+def code_join_together(rules):
+    """
+    Join together multiline
+    codeblocks, so that they
+    are rendered as a single
+    element.
+    """
+
+    begins, ends, in_code = [], [], False
+
+    for i, rule in enumerate(rules):
+        if in_code:
+            if re.search(r'```$', rule) is not None:
+                in_code = False
+                ends.append(i)
+        else:
+            if re.search(r'^```', rule) is not None:
+                in_code = True
+                begins.append(i)
+
+    return join_together(begins, ends, rules)
+
 class MatchDetailView(generic.DetailView):
     model = Match
     template_name = "catalog/match/match_detail.html"
@@ -462,7 +539,6 @@ class MatchDetailView(generic.DetailView):
         )
 
     def get_context_data(self, **kwargs):
-        import re, copy
         context = super(MatchDetailView, self).get_context_data(**kwargs)
 
         query_ruleset = self.request.GET.get('rs')
@@ -490,79 +566,12 @@ class MatchDetailView(generic.DetailView):
             # also, this makes image processing possible as well.
             rulesets_line_breaks = ruleset.rules.replace("\r\n", "\n").split("\n")
 
-            # let's re-join together some things that need it for proper rendering.
-            for rules in rulesets_line_breaks:
-                begin = -1
-                end = -1
-                copy_rules = copy.copy(rules) # make a copy of the ruleset so we don't have to deal with index shenanigans
-
-                # re-join together ordered lists
-                for rule in copy_rules:
-                    if re.match("[0-9]+.", rule) is not None:
-                        if begin == -1:
-                            begin = rule
-                            end = rule
-                        else:
-                            end = rule
-                    else:
-                        if begin != -1:
-                            b = rules.index(begin)
-                            e = rules.index(end)
-                            rules[b:e+1] = ['\n'.join(rules[b:e+1])]
-                            begin = -1
-                            end = -1
-                else:
-                    if begin != -1:
-                        b = rules.index(begin)
-                        e = rules.index(end)
-                        rules[b:e+1] = ['\n'.join(rules[b:e+1])]
-                        begin = -1
-                        end = -1
-
-                # then, re-join together unordered lists
-                begin = -1
-                end = -1
-                for rule in copy_rules:
-                    if rule.startswith("- "):
-                        if begin == -1:
-                            begin = rule
-                            end = rule
-                        else:
-                            end = rule
-                    else:
-                        if begin != -1:
-                            b = rules.index(begin)
-                            e = rules.index(end)
-                            rules[b:e+1] = ['\n'.join(rules[b:e+1])]
-                            begin = -1
-                            end = -1
-                else:
-                    if begin != -1:
-                        b = rules.index(begin)
-                        e = rules.index(end)
-                        rules[b:e+1] = ['\n'.join(rules[b:e+1])]
-                        begin = -1
-                        end = -1
-
-                # i apologize for bad coding
-
-            rulesets_line_breaks_no_trailing_newlines = []
-
-            for rules in rulesets_line_breaks:
-                # let's delete all trailing elements that are empty, 
-                # as they are unnecessary to render.
-                delete_blanks = None
-                for i, line in reversed(list(enumerate(rules))):
-                    if line != "":
-                        delete_blanks = i + 1
-                        break
-                
-                if delete_blanks is not None:
-                    rules = rules[:delete_blanks]
+            # join together ordered lists, unordered lists, and multiline code blocks
+            rulesets_line_breaks = list_join_together(r'[0-9]+\.', rulesets_line_breaks)
+            rulesets_line_breaks = list_join_together(r'- ', rulesets_line_breaks)
+            rulesets_line_breaks = code_join_together(rulesets_line_breaks)
             
-                rulesets_line_breaks_no_trailing_newlines.append(rules)
-
-            ruleset.rules_formatted = rulesets_line_breaks_no_trailing_newlines
+            ruleset.rules_formatted = rulesets_line_breaks
 
         context['rulesets'] = rulesets
 

@@ -7,22 +7,10 @@ from django.utils.safestring import mark_safe
 register = template.Library()
 
 def parse_code_headers(value):
-	lst = value.split("```")
-
-	if len(lst) > 2:
-		string = ""
-		for i in range(0, len(lst)):
-			string += lst[i]
-
-			if i != len(lst) - 1:
-				if i % 2 == 0:
-					string += '<code class="code-header">'
-				else:
-					string += "</code>"
-
-		return string
+	if value.startswith('```') and value.endswith('```'):
+		return '<code class="code-header">' + value.replace("```", '').strip() + '</code>'
 	else:
-		return "```".join(lst)
+		return value
 
 def parse_underlines(value):
 	lst = value.split("__")

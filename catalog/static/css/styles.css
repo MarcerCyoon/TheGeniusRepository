@@ -121,6 +121,7 @@ text-shadow: 0px -1px 0px rgba(255,255,255,0.3), 0px 1px 0px rgba(0,0,0,0.7); */
 .spoiler { 
   color: black; 
   background-color: black;
+  white-space: pre-wrap;
 }
 
 .spoiler:hover {
@@ -148,7 +149,7 @@ text-shadow: 0px -1px 0px rgba(255,255,255,0.3), 0px 1px 0px rgba(0,0,0,0.7); */
   margin-top: 0.4em;
   margin-bottom: 1em;
   padding: .5em;
-  
+  white-space: pre-wrap;
 }
 
 /* make blockquotes look similar to Discord */
