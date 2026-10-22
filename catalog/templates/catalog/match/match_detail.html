@@ -133,7 +133,20 @@
                 {% elif '.discordapp.' in rule or '.imgur.' in rule %}
                   <div class="text-center"><img src={{ rule }}></div>
                 {% else %}
-                  <div class="pr-2">{{ rule|discordify|markdownify }}</div>
+                  {% comment %}
+                  We gotta do this because markdownifying codeblocks adds a bunch of <p> tags that RUIN
+                  the formatting like what the FUCK man. Check it for yourself, future me:
+                  if your markdown.markdown("<code>hi\n\nhi</code>"), it will ADD A BUNCH OF <p>s
+                  everywhere and RUIN the formatting. But for some reason oh gee markdown.markdown("<code>hi\nhi</code>")
+                  this works normally. Why does adding two consecutive newlines break shit??? I don't fucking
+                  understand. Anyways, for now, we have this stupid workaround that I sure hope doesn't
+                  break other functionality.
+                  {% endcomment %}
+                  {% if '```' in rule %}
+                    <div class="pr-2">{{ rule|discordify }}</div>
+                  {% else %}
+                    <div class="pr-2">{{ rule|discordify|markdownify }}</div>
+                  {% endif %}
                 {% endif %}
               {% endfor %}
                 <hr>
@@ -157,7 +170,11 @@
               {% elif '.discordapp.' in rule or '.imgur.' in rule %}
                 <div class="text-center"><img src={{ rule }}></div>
               {% else %}
-                <div class="pr-2">{{ rule|discordify|markdownify }}</div>
+                {% if '```' in rule %}
+                  <div class="pr-2">{{ rule|discordify }}</div>
+                {% else %}
+                  <div class="pr-2">{{ rule|discordify|markdownify }}</div>
+                {% endif %}
               {% endif %}
             {% endfor %}
                 <hr>

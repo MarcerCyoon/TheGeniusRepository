@@ -497,9 +497,6 @@ def list_join_together(regex, rules):
             if begin != -1:
                 begins.append(begin)
                 ends.append(end)
-                # b = rules.index(begin) # there is a uniqueness assumption here. so if there are two identical lines this might fail.
-                # e = rules.index(end)
-                # rules[b:e+1] = ['\n'.join(rules[b:e+1])]
                 begin = -1
                 end = -1
     
