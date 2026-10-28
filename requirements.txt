@@ -8,7 +8,7 @@ bleach==6.4.0
 brotli==1.2.1
 build==0.10.0
 CacheControl==0.12.11
-certifi==2023.7.22
+certifi==2026.10.18
 cffi==1.15.1
 charset-normalizer==3.1.0
 cleo==2.0.1
@@ -37,10 +37,10 @@ jaraco.classes==3.2.3
 jsonschema==4.17.3
 keyring==23.13.1
 lockfile==0.12.2
-Markdown==3.4.3
+Markdown==3.8.1
 MarkupPy==1.14
 more-itertools==9.1.0
-msgpack==1.2.1
+msgpack==1.2.3
 multidict==6.0.4
 mutagen==1.46.0
 numpy==1.26.1
@@ -57,7 +57,7 @@ ptyprocess==0.7.0
 pycparser==2.21
 pycryptodomex==3.21.0
 pyjsparser==2.7.1
-pymongo==4.18.2
+pymongo==4.18.3
 pyparsing==3.0.9
 pyproject_hooks==1.0.0
 pyrsistent==0.19.3
@@ -68,7 +68,7 @@ PyYAML==6.0.1
 rapidfuzz==2.15.1
 requests==2.34.2
 requests-toolbelt==0.10.1
-setuptools==84.0.0
+setuptools==84.1.0
 shellingham==1.5.0.post1
 six==1.16.0
 sqlparse==0.6.0
