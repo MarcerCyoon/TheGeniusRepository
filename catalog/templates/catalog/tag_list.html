@@ -29,7 +29,7 @@
 	{% for tag in tag_list %}
 		<tr>
 			<td>
-				{{ tag.name }}
+				<a href="{% url 'search' %}?q=tag%3D&quot;{{ tag.name }}&quot;">{{ tag.name }}</a>
 			</td>
 			<td>
 				{{ tag.description }}
