@@ -172,7 +172,7 @@ class RulesetInline(admin.StackedInline):
 @admin.register(Match)
 class MatchAdmin(ImportExportModelAdmin):
     resource_classes = [MatchResource, MatchBasicResource]
-    list_display = ('match_type', 'name', 'display_designers', 'display_ORGs')
+    list_display = ('match_type', 'name', 'display_designers', 'display_ORGs', 'created_at', 'updated_at')
     list_display_links = ['name']
     list_filter = ('match_type', 'designers',)
     search_fields = ['name']
@@ -192,7 +192,7 @@ class RulesetAdmin(ImportExportModelAdmin):
     def get_name(self, ruleset):
         return ruleset.alias if ruleset.alias is not None and ruleset.alias != "" else ruleset.match.name
     
-    list_display = ('get_match_type', 'get_name', 'ORG', 'display_tags')
+    list_display = ('get_match_type', 'get_name', 'ORG', 'display_tags', 'created_at', 'updated_at')
     list_display_links = ['get_name']
     list_filter = ('ORG',)
     search_fields = ['match__name', 'alias']

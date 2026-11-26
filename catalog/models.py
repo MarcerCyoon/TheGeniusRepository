@@ -2,8 +2,15 @@ from django.db import models
 from django.db.models import Index
 from django.urls import reverse
 
+class TimestampedModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
 # Create your models here.
-class Ruleset(models.Model):
+class Ruleset(TimestampedModel):
     alias = models.CharField(max_length=200, blank=True, null=True, help_text="Write the alias for this game for this specific Ruleset, if it had one.")
     ORG = models.ForeignKey('ORG', on_delete=models.SET_NULL, null=True, help_text="Choose the ORG this version of the Ruleset has appeared in.")
     episode = models.CharField(max_length=100, help_text="Details about the episode in which this Ruleset was played (such as 'MM7', 'Episode 6', 'DM6')")
@@ -33,7 +40,7 @@ class Ruleset(models.Model):
     
     display_tags.short_description = 'Tags'
 
-class Match(models.Model):
+class Match(TimestampedModel):
     name = models.CharField(max_length=200)
     designers = models.ManyToManyField('Designer', verbose_name="Designer(s)")
     # contributors = models.ManyToManyField('Designer', verbose_name="Contributor(s)", help_text="Contributors are those who were not one of the main designers, but still contributed to elements of the game.", blank=True)
@@ -87,7 +94,7 @@ class Match(models.Model):
     
     display_ORGs.short_description = 'ORGs'
 
-class Designer(models.Model):
+class Designer(TimestampedModel):
     name = models.CharField(max_length=100)
     desc = models.CharField(max_length=500)
 
@@ -100,7 +107,7 @@ class Designer(models.Model):
     class Meta:
         ordering = ['name']
     
-class ORG(models.Model):
+class ORG(TimestampedModel):
     name = models.CharField(max_length=200)
     size = models.IntegerField()
     start_date = models.DateField()
@@ -120,7 +127,7 @@ class ORG(models.Model):
     def get_absolute_url(self):
         return reverse("org-detail", args=[str(self.pk)])
 
-class Tag(models.Model):
+class Tag(TimestampedModel):
     name = models.CharField(max_length=200, help_text='Enter a tag (e.g. \'social deduction\' or \'bidding\')')
     description = models.CharField(max_length=1000, help_text='Enter a description for the tag.', null=True, blank=True)
 
@@ -147,7 +154,7 @@ class YearAward(models.Model):
     class Meta:
         ordering = ['-year', 'award']
 
-class Award(models.Model):
+class Award(TimestampedModel):
     name = models.CharField(max_length=200, help_text="Enter the name of this award (e.g. \'Most Fun MM\').")
     description = models.CharField(max_length=1000, help_text='Enter the description of this award.')
     priority = models.PositiveIntegerField(default=100, help_text="Priority value for awards ordering in view.")
